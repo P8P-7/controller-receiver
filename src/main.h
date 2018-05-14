@@ -16,6 +16,7 @@
 #include "modules/bluetooth_controller/include/goliath/bluetooth_controller.h"
 #include "modules/io/include/goliath/zmq_io.h"
 #include "modules/io/include/goliath/zmq_publisher.h"
+#include "Message.pb.h"
 
 using namespace goliath;
 
@@ -32,6 +33,19 @@ public:
         value = atoi(val.c_str());
     }
 };
+
+enum JOYSTICK{
+    JSLX = 0,
+    JSLY = 1,
+    JSRX = 2,
+    JSRY = 3,
+    BTN1 = 4,
+    BTN2 = 5,
+    BTN3 = 6,
+    BTN4 = 7,
+};
+
+static std::map<std::string, JOYSTICK> JOYSTICKMAP;
 
 int main();
 

@@ -7,7 +7,6 @@ SET(SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(controller_converter
-        pthread
         goliath-proto
         goliath-io-module
         goliath-bluetooth_controller-module

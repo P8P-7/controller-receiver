@@ -16,3 +16,4 @@ boost::asio::serial_port bluetooth_controller::connect() {
     port.set_option(boost::asio::serial_port_base::character_size(8));
     return port;
 }
+
