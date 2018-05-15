@@ -8,31 +8,15 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
 #include <zmq.hpp>
-
 #include <boost/asio.hpp>
 #include <boost/asio/serial_port.hpp>
 #include "modules/bluetooth_controller/include/goliath/bluetooth_controller.h"
-#include "modules/io/include/goliath/zmq_io.h"
+//#include "modules/io/include/goliath/zmq_io.h"
 #include "modules/io/include/goliath/zmq_publisher.h"
 #include "Message.pb.h"
 
 using namespace goliath;
-
-struct Control {
-    std::string control;
-    int value;
-public:
-    Control(std::string con, int val){
-        control = con;
-        value = val;
-    }
-    Control(std::string con, std::string val){
-        control = con;
-        value = atoi(val.c_str());
-    }
-};
 
 enum CONTROL{
     JSLX = 0,
@@ -45,15 +29,34 @@ enum CONTROL{
     BTN4 = 7,
 };
 
-static std::map<std::string, CONTROL> CONTROLMAP;
+struct Control {
+//    std::string control;
+    CONTROL control;
+    int value;
+public:
+//    Control(std::string con, int val){
+    Control(CONTROL con, int val){
+        control = con;
+        value = val;
+    }
+//    Control(std::string con, std::string val){
+    Control(CONTROL con, std::string val){
+        control = con;
+        value = atoi(val.c_str());
+    }
+};
 
-static std::map<CONTROL , std::function<Message(Control)>> FUNCTIONMAP;
+static std::map<std::string, CONTROL> CONTROL_MAP;
+
+static std::map<CONTROL , std::function<Message(Control)>> FUNCTION_MAP;
 
 // Functions:
 
 void initControls();
 
 Message joystickToMoveCommand(Control control);
+
+Message buttonToMessage(Control control);
 
 Message convert(Control control);
 

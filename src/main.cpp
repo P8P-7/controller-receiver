@@ -1,14 +1,18 @@
 #include "main.h"
 
 void initControls() {
-    FUNCTIONMAP.insert(std::make_pair(JSLX,joystickToMoveCommand));
-    FUNCTIONMAP.insert(std::make_pair(JSLY,joystickToMoveCommand));
-    FUNCTIONMAP.insert(std::make_pair(JSRX,joystickToMoveCommand));
-    FUNCTIONMAP.insert(std::make_pair(JSRY,joystickToMoveCommand));
+    // Map function to controller input
+    FUNCTION_MAP.insert(std::make_pair(JSLX,joystickToMoveCommand));
+    FUNCTION_MAP.insert(std::make_pair(JSLY,joystickToMoveCommand));
+    FUNCTION_MAP.insert(std::make_pair(JSRX,joystickToMoveCommand));
+    FUNCTION_MAP.insert(std::make_pair(JSRY,joystickToMoveCommand));
+    FUNCTION_MAP.insert(std::make_pair(BTN1,buttonToMessage));
+    FUNCTION_MAP.insert(std::make_pair(BTN2,buttonToMessage));
+    FUNCTION_MAP.insert(std::make_pair(BTN3,buttonToMessage));
+    FUNCTION_MAP.insert(std::make_pair(BTN4,buttonToMessage));
 }
 
 Message joystickToMoveCommand(Control control) {
-    std::cout << control.control << ':' << control.value << std::endl;
     Message message;
     auto *moveCommand(new MoveCommand);
     MotorCommand_gears gear;
@@ -17,6 +21,7 @@ Message joystickToMoveCommand(Control control) {
             MotorCommand_motors_LEFT_BACK
     };
 
+    // Select gear
     if (control.value < 0) {
         gear = MotorCommand_gears_FORWARD;
     } else if (control.value > 0) {
@@ -25,14 +30,16 @@ Message joystickToMoveCommand(Control control) {
         gear = MotorCommand_gears_LOCK;
     }
 
-    if (control.control == "JSLX" || control.control == "JSLY") {
+    // Select motors
+    if (control.control == JSLX || control.control == JSLY) {
         motors[0] = MotorCommand_motors_LEFT_FRONT;
         motors[1] = MotorCommand_motors_LEFT_BACK;
-    } else {
+    } else if (control.control == JSRX || control.control == JSRY){
         motors[0] = MotorCommand_motors_RIGHT_FRONT;
         motors[1] = MotorCommand_motors_RIGHT_BACK;
     }
 
+    // Add motor commands to single move command
     for (MotorCommand_motors motor : motors) {
         MotorCommand *motorCommand = moveCommand->add_commands();
         motorCommand->set_motor(motor);
@@ -40,17 +47,18 @@ Message joystickToMoveCommand(Control control) {
         motorCommand->set_speed(control.value);
     }
 
+    // Put move command in a message
     message.set_allocated_movecommand(moveCommand);
 
     return message;
 }
 
-Message buttonToMessage(Control control){
+Message buttonToMessage(Control control) {
     //TODO button actions
 }
 
 Message convert(Control control) {
-    return FUNCTIONMAP[CONTROLMAP[control.control]](control);
+    return FUNCTION_MAP[control.control](control);
 }
 
 static void show_usage(std::string name)
@@ -70,6 +78,7 @@ int main(int argc, char **argv) {
     bool stop = false;
     bool debug = false;
 
+    // Command line options
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if ((arg == "-h") || (arg == "--help")) {
@@ -97,11 +106,15 @@ int main(int argc, char **argv) {
         }
     }
 
+    // Set controls
     initControls();
 
+
+    // Setup ZMQ publisher
     zmq::context_t context(1);
     io::zmq_publisher pub(context, brokerAdress, 5556);
 
+    // Setup bluetooth serial connection
     btc::bluetooth_controller bt(device);
     boost::asio::serial_port port = bt.connect();
 
@@ -110,6 +123,7 @@ int main(int argc, char **argv) {
         auto *buffer = new char[BUFFER_SIZE];
         int i = 0;
 
+        // Read commands from serial
         while (boost::asio::read(port, boost::asio::buffer(&c, 1)) == 1) {
             buffer[i++] = c;
 
@@ -118,22 +132,26 @@ int main(int argc, char **argv) {
             }
         }
 
+        // Find begin, separator and end of message
         std::string command(buffer);
         std::size_t begin_pos = command.find('{');
-        std::size_t end_pos = command.find('}');
         std::size_t separator_pos = command.find(':');
+        std::size_t end_pos = command.find('}');
 
+        // Put data in Control struct
         Control control(
-                command.substr(begin_pos + 1, separator_pos - begin_pos - 1),      // Substring between '{' and ':'
+                CONTROL_MAP[command.substr(begin_pos + 1, separator_pos - begin_pos - 1)],      // Substring between '{' and ':'
                 command.substr(separator_pos + 1, end_pos - separator_pos - 1)); // Substring between ':' and '}'
 
+        // Convert to protobuf Message
         Message message = convert(control);
 
+        // Print controller input
         if(debug){
             std::cout << std::endl << "control: " << control.control << std::endl << "state: " << control.value << std::endl << std::endl;
         }
 
-//      Send topic
+        // Send topic to broker
         pub.publish(message);
     }
 }
