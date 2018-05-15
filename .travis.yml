@@ -1,0 +1,22 @@
+sudo: required
+
+language: cpp
+compiler:
+  - gcc
+
+branches:
+  except:
+    - gh-pages
+
+env:
+  global:
+    - GH_REPO_REF: github.com/P8P-7/controller-receiver
+
+addons:
+  apt:
+    packages:
+      - doxygen
+
+script:
+  - cd $TRAVIS_BUILD_DIR/doc
+  - ./push_docs.sh
