@@ -53,6 +53,16 @@ Message convert(Control control) {
     return FUNCTIONMAP[CONTROLMAP[control.control]](control);
 }
 
+static void show_usage(std::string name)
+{
+    std::cerr << "Usage: " << name << " <option(s)> ARGUMENT\n"
+              << "Options:\n"
+              << "\t-h,--help\t\tShow this help message\n"
+              << "\t-a,--address IP\t\tSpecify the broker ip-address\n"
+              << "\t-d,--device DEVICE\tSpecify the device path"
+              << std::endl;
+}
+
 int main(int argc, char **argv) {
     const int BUFFER_SIZE = 1024;
     const char *brokerAdress = "localhost";
@@ -61,16 +71,22 @@ int main(int argc, char **argv) {
 
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
-        if ((arg == "-a") || (arg == "--adress")) {
+        if ((arg == "-h") || (arg == "--help")) {
+            show_usage(argv[0]);
+            return 0;
+        }
+        else if ((arg == "-a") || (arg == "--address")) {
             if (i + 1 < argc) {
-                brokerAdress = argv[i++];
+                i++;
+                brokerAdress = argv[i];
             } else {
-                std::cerr << "--adress option requires one argument." << std::endl;
+                std::cerr << "--address option requires one argument." << std::endl;
                 return 1;
             }
         } else if ((arg == "-d") || (arg == "--device")) {
             if (i + 1 < argc) {
-                device = argv[i++];
+                i++;
+                device = argv[i];
             } else {
                 std::cerr << "--device option requires one argument." << std::endl;
                 return 1;
