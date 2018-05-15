@@ -30,16 +30,13 @@ enum CONTROL{
 };
 
 struct Control {
-//    std::string control;
     CONTROL control;
     int value;
 public:
-//    Control(std::string con, int val){
     Control(CONTROL con, int val){
         control = con;
         value = val;
     }
-//    Control(std::string con, std::string val){
     Control(CONTROL con, std::string val){
         control = con;
         value = atoi(val.c_str());
