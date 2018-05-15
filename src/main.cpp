@@ -68,6 +68,7 @@ int main(int argc, char **argv) {
     const char *brokerAdress = "localhost";
     const char *device = "/dev/rfcomm1";
     bool stop = false;
+    bool debug = false;
 
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
@@ -91,7 +92,8 @@ int main(int argc, char **argv) {
                 std::cerr << "--device option requires one argument." << std::endl;
                 return 1;
             }
-        } else {
+        } else if (arg == "--debug") {
+            debug = true;
         }
     }
 
@@ -127,7 +129,9 @@ int main(int argc, char **argv) {
 
         Message message = convert(control);
 
-//        std::cout << std::endl << "control: " << control.control << std::endl << "state: " << control.value << std::endl << std::endl;
+        if(debug){
+            std::cout << std::endl << "control: " << control.control << std::endl << "state: " << control.value << std::endl << std::endl;
+        }
 
 //      Send topic
         pub.publish(message);
