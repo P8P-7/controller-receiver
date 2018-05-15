@@ -1,14 +1,21 @@
 #include "main.h"
 
+void initControls() {
+    FUNCTIONMAP.insert(std::make_pair(JSLX,joystickToMoveCommand));
+    FUNCTIONMAP.insert(std::make_pair(JSLY,joystickToMoveCommand));
+    FUNCTIONMAP.insert(std::make_pair(JSRX,joystickToMoveCommand));
+    FUNCTIONMAP.insert(std::make_pair(JSRY,joystickToMoveCommand));
+}
+
 Message joystickToMoveCommand(Control control) {
+    std::cout << control.control << ':' << control.value << std::endl;
     Message message;
     auto *moveCommand(new MoveCommand);
     MotorCommand_gears gear;
     MotorCommand_motors motors[] {
-        MotorCommand_motors_LEFT_FRONT,
-        MotorCommand_motors_LEFT_BACK
+            MotorCommand_motors_LEFT_FRONT,
+            MotorCommand_motors_LEFT_BACK
     };
-
 
     if (control.value < 0) {
         gear = MotorCommand_gears_FORWARD;
@@ -43,30 +50,40 @@ Message buttonToMessage(Control control){
 }
 
 Message convert(Control control) {
-    switch (JOYSTICKMAP[control.control]) {
-        case JSLX:
-        case JSLY:
-        case JSRX:
-        case JSRY:
-            return joystickToMoveCommand(control);
-        case BTN1:
-        case BTN2:
-        case BTN3:
-        case BTN4:
-            break;
-    }
+    return FUNCTIONMAP[CONTROLMAP[control.control]](control);
 }
 
-int main() {
+int main(int argc, char **argv) {
     const int BUFFER_SIZE = 1024;
-
+    const char *brokerAdress = "localhost";
+    const char *device = "/dev/rfcomm1";
     bool stop = false;
 
-    const char *brokerAdress = "localhost";
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if ((arg == "-a") || (arg == "--adress")) {
+            if (i + 1 < argc) {
+                brokerAdress = argv[i++];
+            } else {
+                std::cerr << "--adress option requires one argument." << std::endl;
+                return 1;
+            }
+        } else if ((arg == "-d") || (arg == "--device")) {
+            if (i + 1 < argc) {
+                device = argv[i++];
+            } else {
+                std::cerr << "--device option requires one argument." << std::endl;
+                return 1;
+            }
+        } else {
+        }
+    }
+
+    initControls();
+
     zmq::context_t context(1);
     io::zmq_publisher pub(context, brokerAdress, 5556);
 
-    const char *device = "/dev/rfcomm1";
     btc::bluetooth_controller bt(device);
     boost::asio::serial_port port = bt.connect();
 
@@ -96,7 +113,7 @@ int main() {
 
 //        std::cout << std::endl << "control: " << control.control << std::endl << "state: " << control.value << std::endl << std::endl;
 
-//         Send topic
-         pub.publish(message);
+//      Send topic
+        pub.publish(message);
     }
 }

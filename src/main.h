@@ -34,7 +34,7 @@ public:
     }
 };
 
-enum JOYSTICK{
+enum CONTROL{
     JSLX = 0,
     JSLY = 1,
     JSRX = 2,
@@ -45,8 +45,18 @@ enum JOYSTICK{
     BTN4 = 7,
 };
 
-static std::map<std::string, JOYSTICK> JOYSTICKMAP;
+static std::map<std::string, CONTROL> CONTROLMAP;
 
-int main();
+static std::map<CONTROL , std::function<Message(Control)>> FUNCTIONMAP;
+
+// Functions:
+
+void initControls();
+
+Message joystickToMoveCommand(Control control);
+
+Message convert(Control control);
+
+int main(int argc, char *argv[]);
 
 #endif //CONTROLLER_CONVERTER_CONVERTER_H
