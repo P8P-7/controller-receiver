@@ -1,15 +1,26 @@
 #include "main.h"
 
+void initConfig() {
+    // Map function to controller input
+    CONFIGURATION.emplace(MODE, 0);
+    CONFIGURATION.emplace(SENSITIVITY, 255);
+}
+
 void initControls() {
     // Map function to controller input
-    FUNCTION_MAP.insert(std::make_pair(JSLX,joystickToMoveCommand));
-    FUNCTION_MAP.insert(std::make_pair(JSLY,joystickToMoveCommand));
-    FUNCTION_MAP.insert(std::make_pair(JSRX,joystickToMoveCommand));
-    FUNCTION_MAP.insert(std::make_pair(JSRY,joystickToMoveCommand));
-    FUNCTION_MAP.insert(std::make_pair(BTN1,buttonToMessage));
-    FUNCTION_MAP.insert(std::make_pair(BTN2,buttonToMessage));
-    FUNCTION_MAP.insert(std::make_pair(BTN3,buttonToMessage));
-    FUNCTION_MAP.insert(std::make_pair(BTN4,buttonToMessage));
+    switch(CONFIGURATION.find(MODE)->second){
+        default:
+        case 0:
+            FUNCTION_MAP.emplace(JSLX,joystickToMoveCommand);
+            FUNCTION_MAP.emplace(JSLY,joystickToMoveCommand);
+            FUNCTION_MAP.emplace(JSRX,joystickToMoveCommand);
+            FUNCTION_MAP.emplace(JSRY,joystickToMoveCommand);
+            FUNCTION_MAP.emplace(BTN1,buttonToMessage);
+            FUNCTION_MAP.emplace(BTN2,buttonToMessage);
+            FUNCTION_MAP.emplace(BTN3,buttonToMessage);
+            FUNCTION_MAP.emplace(BTN4,buttonToMessage);
+            break;
+    }
 }
 
 Message joystickToMoveCommand(Control control) {
@@ -20,6 +31,9 @@ Message joystickToMoveCommand(Control control) {
             MotorCommand_motors_LEFT_FRONT,
             MotorCommand_motors_LEFT_BACK
     };
+
+    // Apply sensitivity
+    control.value = static_cast<int>((float)control.value * ((float)CONFIGURATION[SENSITIVITY] / 255.0));
 
     // Select gear
     if (control.value < 0) {
@@ -57,9 +71,14 @@ Message buttonToMessage(Control control) {
     //TODO button actions
 }
 
-Message convert(Control control) {
-    return FUNCTION_MAP[control.control](control);
+Message convertControl(Control control) {
+    Message message = FUNCTION_MAP.at(control.control)(control);
+    return message;
 }
+
+void setConfig(CONFIG key, int value) {
+    CONFIGURATION[key] = value;
+};
 
 static void show_usage(std::string name)
 {
@@ -106,6 +125,9 @@ int main(int argc, char **argv) {
         }
     }
 
+    // Set config
+    initConfig();
+
     // Set controls
     initControls();
 
@@ -138,13 +160,18 @@ int main(int argc, char **argv) {
         std::size_t separator_pos = command.find(':');
         std::size_t end_pos = command.find('}');
 
+        std::string key = command.substr(begin_pos + 1, separator_pos - begin_pos - 1);
+        std::string value = command.substr(separator_pos + 1, end_pos - separator_pos - 1);
+
+
         // Put data in Control struct
         Control control(
-                CONTROL_MAP[command.substr(begin_pos + 1, separator_pos - begin_pos - 1)],      // Substring between '{' and ':'
-                command.substr(separator_pos + 1, end_pos - separator_pos - 1)); // Substring between ':' and '}'
+                key,      // Substring between '{' and ':'
+                value                 // Substring between ':' and '}'
+        );
 
         // Convert to protobuf Message
-        Message message = convert(control);
+        Message message = convertControl(control);
 
         // Print controller input
         if(debug){

@@ -11,14 +11,13 @@
 #include <zmq.hpp>
 #include <boost/asio.hpp>
 #include <boost/asio/serial_port.hpp>
-#include "modules/bluetooth_controller/include/goliath/bluetooth_controller.h"
-//#include "modules/io/include/goliath/zmq_io.h"
-#include "modules/io/include/goliath/zmq_publisher.h"
+#include <goliath/bluetooth_controller.h>
+#include <goliath/zmq_publisher.h>
 #include "Message.pb.h"
 
 using namespace goliath;
 
-enum CONTROL{
+enum CONTROL {
     JSLX = 0,
     JSLY = 1,
     JSRX = 2,
@@ -29,23 +28,30 @@ enum CONTROL{
     BTN4 = 7,
 };
 
+enum CONFIG {
+    MODE = 0,
+    SENSITIVITY = 1,
+};
+
 struct Control {
     CONTROL control;
     int value;
 public:
-    Control(CONTROL con, int val){
+    Control(CONTROL con, int val) {
         control = con;
         value = val;
     }
-    Control(CONTROL con, std::string val){
-        control = con;
+    Control(std::string con, std::string val) {
+        control = static_cast<CONTROL>(atoi(con.c_str()));
         value = atoi(val.c_str());
     }
 };
 
 static std::map<std::string, CONTROL> CONTROL_MAP;
 
-static std::map<CONTROL , std::function<Message(Control)>> FUNCTION_MAP;
+static std::map<CONTROL, std::function<Message(Control)>> FUNCTION_MAP;
+
+static std::map<CONFIG, int> CONFIGURATION;
 
 // Functions:
 
@@ -55,7 +61,9 @@ Message joystickToMoveCommand(Control control);
 
 Message buttonToMessage(Control control);
 
-Message convert(Control control);
+Message convertControl(Control control);
+
+void setConfig(CONFIG key, int value);
 
 int main(int argc, char *argv[]);
 
