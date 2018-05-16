@@ -1,4 +1,15 @@
-#include "main.h"
+#include <zmq.hpp>
+#include <boost/asio.hpp>
+#include <boost/asio/serial_port.hpp>
+#include <goliath/bluetooth_controller.h>
+#include <goliath/zmq_publisher.h>
+
+#include "config.h"
+#include "control.h"
+#include "map.h"
+#include "convert.h"
+
+using namespace goliath;
 
 void initConfig() {
     // Map function to controller input
@@ -23,75 +34,16 @@ void initControls() {
     }
 }
 
-Message joystickToMoveCommand(Control control) {
-    Message message;
-    auto *moveCommand(new MoveCommand);
-    MotorCommand_gears gear;
-    MotorCommand_motors motors[] {
-            MotorCommand_motors_LEFT_FRONT,
-            MotorCommand_motors_LEFT_BACK
-    };
-
-    // Apply sensitivity
-    control.value = static_cast<int>((float)control.value * ((float)CONFIGURATION[SENSITIVITY] / 255.0));
-
-    // Select gear
-    if (control.value < 0) {
-        gear = MotorCommand_gears_FORWARD;
-    } else if (control.value > 0) {
-        gear = MotorCommand_gears_BACKWARD;
-    } else {
-        gear = MotorCommand_gears_LOCK;
-    }
-
-    // Select motors
-    if (control.control == JSLX || control.control == JSLY) {
-        motors[0] = MotorCommand_motors_LEFT_FRONT;
-        motors[1] = MotorCommand_motors_LEFT_BACK;
-    } else if (control.control == JSRX || control.control == JSRY){
-        motors[0] = MotorCommand_motors_RIGHT_FRONT;
-        motors[1] = MotorCommand_motors_RIGHT_BACK;
-    }
-
-    // Add motor commands to single move command
-    for (MotorCommand_motors motor : motors) {
-        MotorCommand *motorCommand = moveCommand->add_commands();
-        motorCommand->set_motor(motor);
-        motorCommand->set_gear(gear);
-        motorCommand->set_speed(control.value);
-    }
-
-    // Put move command in a message
-    message.set_allocated_movecommand(moveCommand);
-
-    return message;
-}
-
-Message buttonToMessage(Control control) {
-    //TODO button actions
-}
-
-Message convertControl(Control control) {
-    Message message = FUNCTION_MAP.at(control.control)(control);
-    return message;
-}
-
-void setConfig(CONFIG key, int value) {
-    CONFIGURATION[key] = value;
-};
-
 static void show_usage(std::string name)
 {
     std::cerr << "Usage: " << name << " <option(s)> ARGUMENT\n"
               << "Options:\n"
               << "\t-h,--help\t\tShow this help message\n"
               << "\t-a,--address IP\t\tSpecify the broker ip-address\n"
-              << "\t-d,--device DEVICE\tSpecify the device path"
-              << std::endl;
+              << "\t-d,--device DEVICE\tSpecify the device path\n";
 }
 
 int main(int argc, char **argv) {
-    const int BUFFER_SIZE = 1024;
     const char *brokerAdress = "localhost";
     const char *device = "/dev/rfcomm1";
     bool stop = false;
@@ -131,7 +83,6 @@ int main(int argc, char **argv) {
     // Set controls
     initControls();
 
-
     // Setup ZMQ publisher
     zmq::context_t context(1);
     io::zmq_publisher pub(context, brokerAdress, 5556);
@@ -142,6 +93,7 @@ int main(int argc, char **argv) {
 
     while (!stop) {
         char c;
+        const int BUFFER_SIZE = 1024;
         auto *buffer = new char[BUFFER_SIZE];
         int i = 0;
 
@@ -163,20 +115,19 @@ int main(int argc, char **argv) {
         std::string key = command.substr(begin_pos + 1, separator_pos - begin_pos - 1);
         std::string value = command.substr(separator_pos + 1, end_pos - separator_pos - 1);
 
-
         // Put data in Control struct
         Control control(
-                key,      // Substring between '{' and ':'
-                value                 // Substring between ':' and '}'
+                key,            // Substring between '{' and ':'
+                value           // Substring between ':' and '}'
         );
-
-        // Convert to protobuf Message
-        Message message = convertControl(control);
 
         // Print controller input
         if(debug){
             std::cout << std::endl << "control: " << control.control << std::endl << "state: " << control.value << std::endl << std::endl;
         }
+
+        // Convert to protobuf Message
+        Message message = convertControl(control, FUNCTION_MAP);
 
         // Send topic to broker
         pub.publish(message);
