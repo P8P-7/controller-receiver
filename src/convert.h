@@ -7,9 +7,15 @@
 #include "map.h"
 #include "Message.pb.h"
 
-Message joystickToMoveCommand(Control control);
+enum TYPE {
+    CONTROL_TYPE = 0,
+    CONFIG_TYPE = 1,
+};
 
-Message buttonToMessage(Control control);
+Message dualJoystickToMove(CONTROL control, int value);
 
-//Message convertControl(Control control);
-Message convertControl(Control control, std::map<CONTROL, std::function<Message(Control)>> function);
+Message buttonToMessage(CONTROL control, int value);
+
+Message convertControl(CONTROL control, int value, std::map<CONTROL, std::function<Message(CONTROL,int)>> function);
+
+TYPE stringToType (std::string string);

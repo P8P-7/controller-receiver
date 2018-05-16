@@ -1,6 +1,6 @@
 #include "convert.h"
 
-Message joystickToMoveCommand(Control control) {
+Message dualJoystickToMove(CONTROL control, int value) {
     Message message;
     auto *moveCommand(new MoveCommand);
     MotorCommand_gears gear;
@@ -10,22 +10,22 @@ Message joystickToMoveCommand(Control control) {
     };
 
     // Apply sensitivity
-    control.value = static_cast<int>((float)control.value * ((float)CONFIGURATION[SENSITIVITY] / 255.0));
+    value = static_cast<int>((float)value * ((float)CONFIGURATION[SENSITIVITY] / 255.0));
 
     // Select gear
-    if (control.value < 0) {
+    if (value < 0) {
         gear = MotorCommand_gears_FORWARD;
-    } else if (control.value > 0) {
+    } else if (value > 0) {
         gear = MotorCommand_gears_BACKWARD;
     } else {
         gear = MotorCommand_gears_LOCK;
     }
 
     // Select motors
-    if (control.control == JSLX || control.control == JSLY) {
+    if (control == JSLX || control == JSLY) {
         motors[0] = MotorCommand_motors_LEFT_FRONT;
         motors[1] = MotorCommand_motors_LEFT_BACK;
-    } else if (control.control == JSRX || control.control == JSRY){
+    } else if (control == JSRX || control == JSRY){
         motors[0] = MotorCommand_motors_RIGHT_FRONT;
         motors[1] = MotorCommand_motors_RIGHT_BACK;
     }
@@ -35,7 +35,7 @@ Message joystickToMoveCommand(Control control) {
         MotorCommand *motorCommand = moveCommand->add_commands();
         motorCommand->set_motor(motor);
         motorCommand->set_gear(gear);
-        motorCommand->set_speed(control.value);
+        motorCommand->set_speed(value);
     }
 
     // Put move command in a message
@@ -44,11 +44,14 @@ Message joystickToMoveCommand(Control control) {
     return message;
 }
 
-Message buttonToMessage(Control control) {
+Message buttonToMessage(CONTROL control, int value) {
     //TODO button actions
 }
 
-Message convertControl(Control control, std::map<CONTROL, std::function<Message(Control)>> functionMap) {;
-    Message message = functionMap[control.control](control);
-    return message;
+Message convertControl(CONTROL control, int value, std::map<CONTROL, std::function<Message(CONTROL,int)>> functionMap) {;
+    return functionMap[control](control,value);
+}
+
+TYPE stringToType(std::string string) {
+    return static_cast<TYPE>(atoi(string.c_str()));
 }

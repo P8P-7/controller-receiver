@@ -1,26 +1,18 @@
-//
-// Created by hidde on 12-5-18.
-//
-
-#ifndef CONTROLLER_CONVERTER_BLUETOOTH_CONTROLLER_H
-#define CONTROLLER_CONVERTER_BLUETOOTH_CONTROLLER_H
+#pragma once
 
 #include <string>
-
 #include <boost/asio.hpp>
 #include <boost/asio/serial_port.hpp>
 
 namespace goliath::btc {
-    class bluetooth_controller {
+    class BluetoothController {
     public:
-        bluetooth_controller(std::string);
-        boost::asio::serial_port connect();
+        BluetoothController(const char*);
+        std::tuple<std::string,std::string,std::string> receive();
 
     private:
-        std::string device;
         boost::asio::io_service io;
+        boost::asio::serial_port serialPort = boost::asio::serial_port(io);
+        const int BUFFER_SIZE = 1024;
     };
 }
-
-
-#endif //CONTROLLER_CONVERTER_BLUETOOTH_CONTROLLER_H

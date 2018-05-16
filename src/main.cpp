@@ -18,24 +18,26 @@ void initConfig() {
 }
 
 void initControls() {
+    if (FUNCTION_MAP.size() != 0) {
+        FUNCTION_MAP.clear();
+    }
     // Map function to controller input
-    switch(CONFIGURATION.find(MODE)->second){
+    switch (CONFIGURATION.find(MODE)->second) {
         default:
         case 0:
-            FUNCTION_MAP.emplace(JSLX,joystickToMoveCommand);
-            FUNCTION_MAP.emplace(JSLY,joystickToMoveCommand);
-            FUNCTION_MAP.emplace(JSRX,joystickToMoveCommand);
-            FUNCTION_MAP.emplace(JSRY,joystickToMoveCommand);
-            FUNCTION_MAP.emplace(BTN1,buttonToMessage);
-            FUNCTION_MAP.emplace(BTN2,buttonToMessage);
-            FUNCTION_MAP.emplace(BTN3,buttonToMessage);
-            FUNCTION_MAP.emplace(BTN4,buttonToMessage);
+            FUNCTION_MAP.emplace(JSLX, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSLY, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSRX, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSRY, dualJoystickToMove);
+            FUNCTION_MAP.emplace(BTN1, buttonToMessage);
+            FUNCTION_MAP.emplace(BTN2, buttonToMessage);
+            FUNCTION_MAP.emplace(BTN3, buttonToMessage);
+            FUNCTION_MAP.emplace(BTN4, buttonToMessage);
             break;
     }
 }
 
-static void show_usage(std::string name)
-{
+static void show_usage(std::string name) {
     std::cerr << "Usage: " << name << " <option(s)> ARGUMENT\n"
               << "Options:\n"
               << "\t-h,--help\t\tShow this help message\n"
@@ -44,8 +46,9 @@ static void show_usage(std::string name)
 }
 
 int main(int argc, char **argv) {
-    const char *brokerAdress = "localhost";
-    const char *device = "/dev/rfcomm1";
+    const int BUFFER_SIZE = 1024;
+    const char *brokerAdress = "127.0.0.1";
+    const char *device = "/dev/rfcomm0";
     bool stop = false;
     bool debug = false;
 
@@ -56,7 +59,7 @@ int main(int argc, char **argv) {
             show_usage(argv[0]);
             return 0;
         }
-        else if ((arg == "-a") || (arg == "--address")) {
+        if ((arg == "-a") || (arg == "--address")) {
             if (i + 1 < argc) {
                 i++;
                 brokerAdress = argv[i];
@@ -77,10 +80,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    // Set config
     initConfig();
-
-    // Set controls
     initControls();
 
     // Setup ZMQ publisher
@@ -88,48 +88,52 @@ int main(int argc, char **argv) {
     io::zmq_publisher pub(context, brokerAdress, 5556);
 
     // Setup bluetooth serial connection
-    btc::bluetooth_controller bt(device);
-    boost::asio::serial_port port = bt.connect();
+    btc::BluetoothController bt(device);
 
     while (!stop) {
-        char c;
-        const int BUFFER_SIZE = 1024;
-        auto *buffer = new char[BUFFER_SIZE];
-        int i = 0;
+        // Wait for input data from controller
+        std::tuple<std::string, std::string, std::string> input = bt.receive();
 
-        // Read commands from serial
-        while (boost::asio::read(port, boost::asio::buffer(&c, 1)) == 1) {
-            buffer[i++] = c;
+        // Get input type
+        TYPE type = stringToType(std::get<0>(input));
 
-            if (c == '}') {
-                break; // End of command
+        switch (type) {
+            case CONTROL_TYPE: {
+                // Convert to protobuf Message
+                CONTROL control = stringToControl(std::get<1>(input));
+                int value = stringToValue(std::get<2>(input));
+                Message message = convertControl(control, value, FUNCTION_MAP);
+                // Send topic to broker
+                pub.publish(message);
+
+                if (debug) {
+                    std::cout << std::endl << "control: " << control << std::endl << "state: " << value << std::endl;
+                }
+                break;
             }
+            case CONFIG_TYPE: {
+                // Convert string to CONFIG
+                CONFIG config = stringToConfig(std::get<1>(input));
+                int value = stringToValue(std::get<2>(input));
+
+                // Set config
+                CONFIGURATION[config] = value;
+
+                // Reset controls when mode changes
+                if (config == MODE) {
+                    initControls();
+                }
+
+                if (debug) {
+                    std::cout << std::endl << "config: " << config << std::endl << "state: " << value << std::endl;
+                }
+                break;
+            }
+            default:
+                if (debug) {
+                    std::cout << "\nunknown input\n";
+                }
+                break;
         }
-
-        // Find begin, separator and end of message
-        std::string command(buffer);
-        std::size_t begin_pos = command.find('{');
-        std::size_t separator_pos = command.find(':');
-        std::size_t end_pos = command.find('}');
-
-        std::string key = command.substr(begin_pos + 1, separator_pos - begin_pos - 1);
-        std::string value = command.substr(separator_pos + 1, end_pos - separator_pos - 1);
-
-        // Put data in Control struct
-        Control control(
-                key,            // Substring between '{' and ':'
-                value           // Substring between ':' and '}'
-        );
-
-        // Print controller input
-        if(debug){
-            std::cout << std::endl << "control: " << control.control << std::endl << "state: " << control.value << std::endl << std::endl;
-        }
-
-        // Convert to protobuf Message
-        Message message = convertControl(control, FUNCTION_MAP);
-
-        // Send topic to broker
-        pub.publish(message);
     }
 }

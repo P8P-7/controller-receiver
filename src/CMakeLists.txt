@@ -2,7 +2,7 @@ add_subdirectory(modules)
 
 SET(SOURCES
         main.cpp
-        map.h control.cpp control.h config.h convert.cpp convert.h)
+        map.h control.cpp control.h config.h convert.cpp convert.h config.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

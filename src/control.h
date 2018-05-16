@@ -13,16 +13,6 @@ enum CONTROL {
     BTN4 = 7,
 };
 
-struct Control {
-    CONTROL control;
-    int value;
-public:
-    Control(CONTROL con, int val) {
-        control = con;
-        value = val;
-    }
-    Control(std::string con, std::string val) {
-        control = static_cast<CONTROL>(atoi(con.c_str()));
-        value = atoi(val.c_str());
-    }
-};
+CONTROL stringToControl(std::string string);
+
+int stringToValue(std::string string);
