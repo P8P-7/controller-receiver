@@ -29,7 +29,7 @@ std::tuple<std::string, std::string, std::string> BluetoothController::receive(b
     std::size_t end_pos = command.find('}');
 
 //    std::string type = "1";
-    if(type_separator_pos > begin_pos && separator_pos > type_separator_pos && end_pos > separator_pos) {
+    if(type_separator_pos - begin_pos > 1 && separator_pos - type_separator_pos > 1 && end_pos - separator_pos > 1) {
         std::string type = command.substr(begin_pos + 1, type_separator_pos - begin_pos - 1);
         std::string key = command.substr(type_separator_pos + 1, separator_pos - type_separator_pos - 1);
         std::string value = command.substr(separator_pos + 1, end_pos);
@@ -41,5 +41,9 @@ std::tuple<std::string, std::string, std::string> BluetoothController::receive(b
     }
 
     return std::make_tuple("-1","-1","-1");
+}
+
+void BluetoothController::send(std::string ) {
+
 }
 

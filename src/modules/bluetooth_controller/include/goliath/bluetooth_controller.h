@@ -5,12 +5,34 @@
 #include <boost/asio.hpp>
 #include <boost/asio/serial_port.hpp>
 
+/**
+ * @file bluetooth_controller.h
+ * @author Group 7 - Informatica
+ */
+
+/**
+ * @namespace goliath::btc
+ * @brief Module for bluetooth communication with controller
+ */
 
 namespace goliath::btc {
+    /**
+    * @class goliath::btc::BluetoothController
+    */
     class BluetoothController {
     public:
-        BluetoothController(const char*);
-        std::tuple<std::string,std::string,std::string> receive(bool debug);
+        /**
+        * @fn goliath::btc
+        * @brief Module for bluetooth communication with controller
+        */
+        BluetoothController(const char *);
+
+        /**
+        * @fn goliath::btc
+        * @brief Module for bluetooth communication with controller
+        */
+        std::tuple<std::string, std::string, std::string> receive(bool debug);
+        void send(std::string);
 
     private:
         boost::asio::io_service io;

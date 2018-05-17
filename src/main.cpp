@@ -9,14 +9,27 @@
 #include "map.h"
 #include "convert.h"
 
+/**
+ * @file main.cpp
+ * @author Group 7 - Informatica
+ */
+
 using namespace goliath;
 
+/**
+ * @fn void initConfig()
+ * @brief Initializes controller configuration.
+ */
 void initConfig() {
     // Map function to controller input
     CONFIGURATION.emplace(MODE, 0);
     CONFIGURATION.emplace(SENSITIVITY, 255);
 }
 
+/**
+ * @fn void initControls()
+ * @brief Initializes receiver mode.
+ */
 void initControls() {
     if (FUNCTION_MAP.size() != 0) {
         FUNCTION_MAP.clear();
@@ -37,6 +50,11 @@ void initControls() {
     }
 }
 
+/**
+ * @fn void show_usage(std::string name)
+ * @brief print help menu to console
+ * @param executable name
+ */
 static void show_usage(std::string name) {
     std::cerr << "Usage: " << name << " <option(s)> ARGUMENT\n"
               << "Options:\n"
@@ -45,6 +63,12 @@ static void show_usage(std::string name) {
               << "\t-d,--device DEVICE\tSpecify the device path\n";
 }
 
+/**
+ * @fn int main(int argc, char **argv)
+ * @brief main function
+ * @param number of arguments
+ * @param arguments
+ */
 int main(int argc, char **argv) {
     const int BUFFER_SIZE = 1024;
     const char *brokerAdress = "127.0.0.1";
@@ -104,10 +128,14 @@ int main(int argc, char **argv) {
                 int value = stringToValue(std::get<2>(input));
                 Message message = convertControl(control, value, FUNCTION_MAP);
                 // Send topic to broker
-                pub.publish(message);
+                if(message.ByteSize() > 0){
+                    pub.publish(message);
+                }
 
                 if (debug) {
-                    std::cout << std::endl << "control: " << control << std::endl << "state: " << value << std::endl;
+                    std::cerr << std::endl << "control: " << control << std::endl << "state: "
+                              << static_cast<int>((float) value * ((float) CONFIGURATION[SENSITIVITY] / 255.0))
+                              << std::endl;
                 }
                 break;
             }
@@ -125,13 +153,13 @@ int main(int argc, char **argv) {
                 }
 
                 if (debug) {
-                    std::cout << std::endl << "config: " << config << std::endl << "state: " << value << std::endl;
+                    std::cerr << std::endl << "config: " << config << std::endl << "state: " << value << std::endl;
                 }
                 break;
             }
             default:
                 if (debug) {
-                    std::cout << "unknown input\n";
+                    std::cerr << "unknown input\n";
                 }
                 break;
         }
