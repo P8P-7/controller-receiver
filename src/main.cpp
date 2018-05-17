@@ -48,7 +48,7 @@ static void show_usage(std::string name) {
 int main(int argc, char **argv) {
     const int BUFFER_SIZE = 1024;
     const char *brokerAdress = "127.0.0.1";
-    const char *device = "/dev/rfcomm0";
+    const char *device = "/dev/rfcomm1";
     bool stop = false;
     bool debug = false;
 
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
 
     while (!stop) {
         // Wait for input data from controller
-        std::tuple<std::string, std::string, std::string> input = bt.receive();
+        std::tuple<std::string, std::string, std::string> input = bt.receive(debug);
 
         // Get input type
         TYPE type = stringToType(std::get<0>(input));
@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
             }
             default:
                 if (debug) {
-                    std::cout << "\nunknown input\n";
+                    std::cout << "unknown input\n";
                 }
                 break;
         }

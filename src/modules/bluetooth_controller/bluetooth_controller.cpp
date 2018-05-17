@@ -1,4 +1,4 @@
-#include "include/goliath/bluetooth_controller.h"
+#include <goliath/bluetooth_controller.h>
 
 using namespace goliath::btc;
 
@@ -7,7 +7,7 @@ BluetoothController::BluetoothController(const char* dev){
     serialPort.set_option(boost::asio::serial_port_base::baud_rate(9600)); // Default for bluetooth
     serialPort.set_option(boost::asio::serial_port_base::character_size(8));
 }
-std::tuple<std::string, std::string, std::string> BluetoothController::receive() {
+std::tuple<std::string, std::string, std::string> BluetoothController::receive(bool debug) {
     char c;
     auto *buffer = new char[BUFFER_SIZE];
     int i = 0;
@@ -29,12 +29,17 @@ std::tuple<std::string, std::string, std::string> BluetoothController::receive()
     std::size_t end_pos = command.find('}');
 
 //    std::string type = "1";
-    if(begin_pos > 0 && type_separator_pos > begin_pos && separator_pos > type_separator_pos && end_pos > separator_pos) {
+    if(type_separator_pos > begin_pos && separator_pos > type_separator_pos && end_pos > separator_pos) {
         std::string type = command.substr(begin_pos + 1, type_separator_pos - begin_pos - 1);
         std::string key = command.substr(type_separator_pos + 1, separator_pos - type_separator_pos - 1);
-        std::string value = command.substr(separator_pos + 1, end_pos - separator_pos - 1);
+        std::string value = command.substr(separator_pos + 1, end_pos);
         return std::make_tuple(type,key,value);
     }
+
+    if(debug){
+        std::cerr << command.substr(begin_pos, end_pos + 1) << "\n\n";
+    }
+
     return std::make_tuple("-1","-1","-1");
 }
 
