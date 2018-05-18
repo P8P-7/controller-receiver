@@ -1,12 +1,13 @@
 #include "convert.h"
 
-Message dualJoystickToMove(CONTROL control, int value) {
-    Message message;
+MessageCarrier dualJoystickToMove(CONTROL control, int value) {
+    MessageCarrier message;
+    auto *commandMessage(new CommandMessage);
     auto *moveCommand(new MoveCommand);
-    MotorCommand_gears gear;
-    MotorCommand_motors motors[] {
-            MotorCommand_motors_LEFT_FRONT,
-            MotorCommand_motors_LEFT_BACK
+    MotorCommand_Gear gear;
+    MotorCommand_Motor motors[] {
+            MotorCommand_Motor_LEFT_FRONT,
+            MotorCommand_Motor_LEFT_BACK
     };
 
     // Apply sensitivity
@@ -14,24 +15,24 @@ Message dualJoystickToMove(CONTROL control, int value) {
 
     // Select gear
     if (value < 0) {
-        gear = MotorCommand_gears_FORWARD;
+        gear = MotorCommand_Gear_FORWARD;
     } else if (value > 0) {
-        gear = MotorCommand_gears_BACKWARD;
+        gear = MotorCommand_Gear_BACKWARD;
     } else {
-        gear = MotorCommand_gears_LOCK;
+        gear = MotorCommand_Gear_LOCK;
     }
 
     // Select motors
     if (control == JSLX || control == JSLY) {
-        motors[0] = MotorCommand_motors_LEFT_FRONT;
-        motors[1] = MotorCommand_motors_LEFT_BACK;
+        motors[0] = MotorCommand_Motor_LEFT_FRONT;
+        motors[1] = MotorCommand_Motor_LEFT_BACK;
     } else if (control == JSRX || control == JSRY){
-        motors[0] = MotorCommand_motors_RIGHT_FRONT;
-        motors[1] = MotorCommand_motors_RIGHT_BACK;
+        motors[0] = MotorCommand_Motor_RIGHT_FRONT;
+        motors[1] = MotorCommand_Motor_RIGHT_BACK;
     }
 
     // Add motor commands to single move command
-    for (MotorCommand_motors motor : motors) {
+    for (MotorCommand_Motor motor : motors) {
         MotorCommand *motorCommand = moveCommand->add_commands();
         motorCommand->set_motor(motor);
         motorCommand->set_gear(gear);
@@ -39,16 +40,17 @@ Message dualJoystickToMove(CONTROL control, int value) {
     }
 
     // Put move command in a message
-    message.set_allocated_movecommand(moveCommand);
+    commandMessage->set_allocated_movecommand(moveCommand);
+    message.set_allocated_commandmessage(commandMessage);
 
     return message;
 }
 
-Message buttonToMessage(CONTROL control, int value) {
+MessageCarrier buttonToMessage(CONTROL control, int value) {
     //TODO button actions
 }
 
-Message convertControl(CONTROL control, int value, std::map<CONTROL, std::function<Message(CONTROL,int)>> functionMap) {;
+MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std::function<MessageCarrier(CONTROL,int)>> functionMap) {
     return functionMap[control](control,value);
 }
 

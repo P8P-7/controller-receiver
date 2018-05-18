@@ -2,7 +2,8 @@
 #include <boost/asio.hpp>
 #include <boost/asio/serial_port.hpp>
 #include <goliath/bluetooth_controller.h>
-#include <goliath/zmq_publisher.h>
+#include <goliath/foundation.h>
+#include <goliath/zmq_messaging.h>
 
 #include "config.h"
 #include "control.h"
@@ -108,8 +109,8 @@ int main(int argc, char **argv) {
     initControls();
 
     // Setup ZMQ publisher
-    zmq::context_t context(1);
-    io::zmq_publisher pub(context, brokerAdress, 5556);
+    zmq::context_t context(2);
+    goliath::messaging::ZmqPublisher pub(context,brokerAdress,5556);
 
     // Setup bluetooth serial connection
     btc::BluetoothController bt(device);
@@ -126,16 +127,24 @@ int main(int argc, char **argv) {
                 // Convert to protobuf Message
                 CONTROL control = stringToControl(std::get<1>(input));
                 int value = stringToValue(std::get<2>(input));
-                Message message = convertControl(control, value, FUNCTION_MAP);
+                MessageCarrier message;
+                if(control < CONTROL_NR_ITEMS){
+                    message = convertControl(control, value, FUNCTION_MAP);
+                }
+                else{
+                    bt.send(std::make_tuple("-1","-1","-1"));
+                }
                 // Send topic to broker
                 if(message.ByteSize() > 0){
                     pub.publish(message);
+                    if (debug) {
+                        std::cerr << "control: " << control << std::endl << "state: "
+                                  << static_cast<int>((float) value * ((float) CONFIGURATION[SENSITIVITY] / 255.0))
+                                  << "\n\n";
+                    }
                 }
-
-                if (debug) {
-                    std::cerr << std::endl << "control: " << control << std::endl << "state: "
-                              << static_cast<int>((float) value * ((float) CONFIGURATION[SENSITIVITY] / 255.0))
-                              << std::endl;
+                else if(debug){
+                    std::cerr << "unknown control input\n\n";
                 }
                 break;
             }
@@ -153,13 +162,14 @@ int main(int argc, char **argv) {
                 }
 
                 if (debug) {
-                    std::cerr << std::endl << "config: " << config << std::endl << "state: " << value << std::endl;
+                    std::cerr << "config: " << config << std::endl << "state: " << value << "\n\n";
                 }
                 break;
             }
             default:
+                bt.send(input);
                 if (debug) {
-                    std::cerr << "unknown input\n";
+                    std::cerr << "unknown input\n\n";
                 }
                 break;
         }

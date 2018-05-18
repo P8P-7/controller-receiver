@@ -8,7 +8,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(controller_converter
         goliath-proto
-        goliath-io-module
+        goliath-foundation-module
+        goliath-zmq-messaging-module
         goliath-bluetooth_controller-module
         ${Boost_SYSTEM_LIBRARY}
         ${cppzmq_LIBRARY}

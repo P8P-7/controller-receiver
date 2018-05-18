@@ -3,14 +3,7 @@
 #include <string>
 
 enum CONTROL {
-    JSLX = 0,
-    JSLY = 1,
-    JSRX = 2,
-    JSRY = 3,
-    BTN1 = 4,
-    BTN2 = 5,
-    BTN3 = 6,
-    BTN4 = 7,
+    JSLX, JSLY, JSRX, JSRY, BTN1, BTN2, BTN3, BTN4, CONTROL_NR_ITEMS
 };
 
 CONTROL stringToControl(std::string string);
