@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -74,7 +73,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -99,16 +98,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a949e6b86251034a11324667dec0cf687"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a949e6b86251034a11324667dec0cf687"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>BluetoothController</b> (const char *)</td></tr>
-<tr class="separator:a949e6b86251034a11324667dec0cf687"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd8ba4ec6a4509316fdd474d743cac33"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd8ba4ec6a4509316fdd474d743cac33"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>BluetoothController</b> (const char *dev)</td></tr>
+<tr class="separator:acd8ba4ec6a4509316fdd474d743cac33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e0a45e3744bcca04b7bf496e39d60e2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e0a45e3744bcca04b7bf496e39d60e2"></a>
 std::tuple&lt; std::string, <br class="typebreak"/>
 std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>receive</b> ()</td></tr>
 <tr class="separator:a3e0a45e3744bcca04b7bf496e39d60e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6e05fe0f8909330ecd9b2a4a7da42d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6e05fe0f8909330ecd9b2a4a7da42d1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>send</b> (std::tuple&lt; std::string, std::string, std::string &gt;)</td></tr>
-<tr class="separator:ad6e05fe0f8909330ecd9b2a4a7da42d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfc1d6e08907ab3be1597cc6b4d148b4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adfc1d6e08907ab3be1597cc6b4d148b4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>send</b> (STATUS status, int value)</td></tr>
+<tr class="separator:adfc1d6e08907ab3be1597cc6b4d148b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/P8P-7/controller-receiver/src/modules/bluetooth_controller/include/goliath/<a class="el" href="bluetooth__controller_8h_source.html">bluetooth_controller.h</a></li>

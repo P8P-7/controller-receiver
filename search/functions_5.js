@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lock',['lock',['../classgoliath_1_1handles_1_1Handle.html#ada0713e8f0701f4a295d009b4d26125e',1,'goliath::handles::Handle']]]
+  ['publish',['publish',['../classgoliath_1_1messaging_1_1ZmqPublisher.html#ac88469990306f8774a5b5607ba6e7c32',1,'goliath::messaging::ZmqPublisher']]]
 ];

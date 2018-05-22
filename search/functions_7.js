@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['publish',['publish',['../classgoliath_1_1messaging_1_1ZmqPublisher.html#ac88469990306f8774a5b5607ba6e7c32',1,'goliath::messaging::ZmqPublisher::publish()'],['../classgoliath_1_1foundation_1_1PublisherService.html#aab389796da6ef3b3cb81f89f7f357aff',1,'goliath::foundation::PublisherService::publish()']]]
+  ['zmqio',['ZmqIo',['../classgoliath_1_1messaging_1_1ZmqIo.html#aedf3107755e6271db71038e86744fdac',1,'goliath::messaging::ZmqIo::ZmqIo(zmq::context_t &amp;context, const std::string &amp;host, const int port)'],['../classgoliath_1_1messaging_1_1ZmqIo.html#aa16664d70efd2765b8a0f45b0bb7b8e8',1,'goliath::messaging::ZmqIo::ZmqIo(zmq::context_t &amp;context, const std::string &amp;host, const int port, const int socketType)']]],
+  ['zmqpublisher',['ZmqPublisher',['../classgoliath_1_1messaging_1_1ZmqPublisher.html#a37c4999b044cac860abd8a580586f40e',1,'goliath::messaging::ZmqPublisher']]],
+  ['zmqsubscriber',['ZmqSubscriber',['../classgoliath_1_1messaging_1_1ZmqSubscriber.html#a0c2ee9431939a15cd5741d834d88b77c',1,'goliath::messaging::ZmqSubscriber']]]
 ];

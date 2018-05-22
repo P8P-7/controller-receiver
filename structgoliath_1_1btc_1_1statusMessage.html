@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Goliath II: /home/travis/build/P8P-7/controller-receiver/src/map.h Source File</title>
+<title>Goliath II: goliath::btc::statusMessage Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -40,8 +40,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
-      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -62,8 +62,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
 <!-- window showing the filter options -->
@@ -82,26 +84,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+<li class="navelem"><b>goliath</b></li><li class="navelem"><a class="el" href="namespacegoliath_1_1btc.html">btc</a></li><li class="navelem"><a class="el" href="structgoliath_1_1btc_1_1statusMessage.html">statusMessage</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structgoliath_1_1btc_1_1statusMessage-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">map.h</div>  </div>
+<div class="title">goliath::btc::statusMessage Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="map_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;MessageCarrier.pb.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;functional&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;config.h&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;control.h&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">static</span> std::map&lt;CONTROL, std::function&lt;MessageCarrier(CONTROL,int)&gt;&gt; FUNCTION_MAP;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">static</span> std::map&lt;CONFIG, int&gt; CONFIGURATION;</div>
-</div><!-- fragment --></div><!-- contents -->
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aac57d8928ede36e0986099e7c1e33876"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac57d8928ede36e0986099e7c1e33876"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>statusMessage</b> (STATUS status, int value)</td></tr>
+<tr class="separator:aac57d8928ede36e0986099e7c1e33876"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:aa77fb6a25ec2d9921ae102c73a121cf0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa77fb6a25ec2d9921ae102c73a121cf0"></a>
+STATUS&#160;</td><td class="memItemRight" valign="bottom"><b>status</b></td></tr>
+<tr class="separator:aa77fb6a25ec2d9921ae102c73a121cf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abee4c631b068af5f67a48a8393c5e133"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abee4c631b068af5f67a48a8393c5e133"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>value</b></td></tr>
+<tr class="separator:abee4c631b068af5f67a48a8393c5e133"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this struct was generated from the following files:<ul>
+<li>/home/travis/build/P8P-7/controller-receiver/src/modules/bluetooth_controller/include/goliath/<a class="el" href="bluetooth__controller_8h_source.html">bluetooth_controller.h</a></li>
+<li>/home/travis/build/P8P-7/controller-receiver/src/modules/bluetooth_controller/bluetooth_controller.cpp</li>
+</ul>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

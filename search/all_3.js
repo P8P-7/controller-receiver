@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['foundation_2eh',['foundation.h',['../foundation_8h.html',1,'']]]
+  ['btc',['btc',['../namespacegoliath_1_1btc.html',1,'goliath']]],
+  ['messaging',['messaging',['../namespacegoliath_1_1messaging.html',1,'goliath']]]
 ];

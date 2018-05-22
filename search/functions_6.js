@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['main',['main',['../main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main.cpp']]],
-  ['merge_5ffrom_5fmessage',['merge_from_message',['../classgoliath_1_1repositories_1_1ProtoRepository.html#ac1db9166738b372d0d759e46f6c30e55',1,'goliath::repositories::ProtoRepository']]]
+  ['start',['start',['../classgoliath_1_1messaging_1_1ZmqSubscriber.html#a539e2c1be4f787bc31c16043a008dd26',1,'goliath::messaging::ZmqSubscriber']]],
+  ['stop',['stop',['../classgoliath_1_1messaging_1_1ZmqSubscriber.html#ae3fd22868c3094fde0981ae266314194',1,'goliath::messaging::ZmqSubscriber']]]
 ];
