@@ -50,7 +50,7 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
     return message;
 }
 
-MessageCarrier buttonToFrontArm(CONTROL control, int value) {
+MessageCarrier buttonToFrontWing(CONTROL control, int value) {
     MessageCarrier message;
     auto *commandMessage(new CommandMessage);
     auto *moveCommand(new MoveWingCommand);
@@ -77,6 +77,53 @@ MessageCarrier buttonToFrontArm(CONTROL control, int value) {
             break;
         case BTN4:
             wing = ServoCommand_Motor_RIGHT_FRONT;
+            direction = ServoCommand_Direction_DOWN;
+            break;
+    }
+
+    ServoCommand *wingCommand = moveCommand->add_commands();
+    wingCommand->set_motor(wing);
+    wingCommand->set_speed(speed);
+    wingCommand->set_direction(direction);
+
+    commandMessage->set_allocated_movewingcommand(moveCommand);
+    message.set_allocated_commandmessage(commandMessage);
+
+    if(value == 0){
+        BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" released.";
+    } else{
+        BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" pressed.";
+    }
+    return message;
+}
+
+MessageCarrier buttonToBackWing(CONTROL control, int value) {
+    MessageCarrier message;
+    auto *commandMessage(new CommandMessage);
+    auto *moveCommand(new MoveWingCommand);
+
+    ServoCommand_Motor wing;
+    ServoCommand_Direction direction;
+    int speed = 0;
+    if(value == 1){
+        speed = 512;
+    }
+
+    switch (control) {
+        case BTN1:
+            wing = ServoCommand_Motor_LEFT_BACK;
+            direction = ServoCommand_Direction_UP;
+            break;
+        case BTN2:
+            wing = ServoCommand_Motor_LEFT_BACK;
+            direction = ServoCommand_Direction_DOWN;
+            break;
+        case BTN3:
+            wing = ServoCommand_Motor_RIGHT_BACK;
+            direction = ServoCommand_Direction_UP;
+            break;
+        case BTN4:
+            wing = ServoCommand_Motor_RIGHT_BACK;
             direction = ServoCommand_Direction_DOWN;
             break;
     }

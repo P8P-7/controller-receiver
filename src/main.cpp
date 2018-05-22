@@ -44,10 +44,10 @@ void initControls() {
             FUNCTION_MAP.emplace(JSLY, dualJoystickToMove);
             FUNCTION_MAP.emplace(JSRX, dualJoystickToMove);
             FUNCTION_MAP.emplace(JSRY, dualJoystickToMove);
-            FUNCTION_MAP.emplace(BTN1, buttonToFrontArm);
-            FUNCTION_MAP.emplace(BTN2, buttonToFrontArm);
-            FUNCTION_MAP.emplace(BTN3, buttonToFrontArm);
-            FUNCTION_MAP.emplace(BTN4, buttonToFrontArm);
+            FUNCTION_MAP.emplace(BTN1, buttonToBackWing);
+            FUNCTION_MAP.emplace(BTN2, buttonToBackWing);
+            FUNCTION_MAP.emplace(BTN3, buttonToBackWing);
+            FUNCTION_MAP.emplace(BTN4, buttonToBackWing);
             break;
     }
 }
@@ -64,7 +64,7 @@ void sendToController(MessageCarrier messageCarrier) {
 /**
  * @fn void show_usage(std::string name)
  * @brief print help menu to console
- * @param executable name
+ * @param name executable name
  */
 static void show_usage(std::string name) {
     std::cerr << "Usage: " << name << " <option(s)> ARGUMENT\n"
@@ -77,8 +77,8 @@ static void show_usage(std::string name) {
 /**
  * @fn int main(int argc, char **argv)
  * @brief main function
- * @param number of arguments
- * @param arguments
+ * @param argc number of arguments
+ * @param argv arguments
  */
 int main(int argc, char **argv) {
     const int BUFFER_SIZE = 1024;
