@@ -1,9 +1,9 @@
 [submodule "third_party/proto"]
 	path = third_party/proto
 	url = https://github.com/P8P-7/proto.git
-[submodule "src/modules/foundation"]
-	path = src/modules/foundation
-	url = https://github.com/P8P-7/foundation.git
 [submodule "src/modules/zmq-messaging"]
 	path = src/modules/zmq-messaging
 	url = https://github.com/P8P-7/zmq-messaging.git
+[submodule "third_party/foundation"]
+	path = third_party/foundation
+	url = https://github.com/P8P-7/foundation.git
