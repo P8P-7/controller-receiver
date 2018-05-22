@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <MessageCarrier.pb.h>
+#include <boost/log/trivial.hpp>
 
 #include "config.h"
 #include "control.h"
@@ -14,7 +15,7 @@ enum TYPE {
 
 MessageCarrier dualJoystickToMove(CONTROL control, int value);
 
-MessageCarrier buttonToMessage(CONTROL control, int value);
+MessageCarrier buttonToFrontArm(CONTROL control, int value);
 
 MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std::function<MessageCarrier(CONTROL,int)>> function);
 

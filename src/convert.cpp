@@ -10,8 +10,10 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
             MotorCommand_Motor_LEFT_BACK
     };
 
+    BOOST_LOG_TRIVIAL(debug) << "Axis \"" << control << "\" moved to \"" << value << "\".";
+
     // Apply sensitivity
-    value = static_cast<int>((float)value * ((float)CONFIGURATION[SENSITIVITY] / 255.0));
+    value = value * CONFIGURATION[SENSITIVITY] / 255;
 
     // Select gear
     if (value < 0) {
@@ -43,11 +45,56 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
     commandMessage->set_allocated_movecommand(moveCommand);
     message.set_allocated_commandmessage(commandMessage);
 
+    BOOST_LOG_TRIVIAL(debug) << "Axis \"" << control << "\" moved to \"" << value << "\".";
+
     return message;
 }
 
-MessageCarrier buttonToMessage(CONTROL control, int value) {
-    //TODO button actions
+MessageCarrier buttonToFrontArm(CONTROL control, int value) {
+    MessageCarrier message;
+    auto *commandMessage(new CommandMessage);
+    auto *moveCommand(new MoveWingCommand);
+
+    ServoCommand_Motor wing;
+    ServoCommand_Direction direction;
+    int speed = 0;
+    if(value == 1){
+        speed = 512;
+    }
+
+    switch (control) {
+        case BTN1:
+            wing = ServoCommand_Motor_LEFT_FRONT;
+            direction = ServoCommand_Direction_UP;
+            break;
+        case BTN2:
+            wing = ServoCommand_Motor_LEFT_FRONT;
+            direction = ServoCommand_Direction_DOWN;
+            break;
+        case BTN3:
+            wing = ServoCommand_Motor_RIGHT_FRONT;
+            direction = ServoCommand_Direction_UP;
+            break;
+        case BTN4:
+            wing = ServoCommand_Motor_RIGHT_FRONT;
+            direction = ServoCommand_Direction_DOWN;
+            break;
+    }
+
+    ServoCommand *wingCommand = moveCommand->add_commands();
+    wingCommand->set_motor(wing);
+    wingCommand->set_speed(speed);
+    wingCommand->set_direction(direction);
+
+    commandMessage->set_allocated_movewingcommand(moveCommand);
+    message.set_allocated_commandmessage(commandMessage);
+
+    if(value == 0){
+        BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" released.";
+    } else{
+        BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" pressed.";
+    }
+    return message;
 }
 
 MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std::function<MessageCarrier(CONTROL,int)>> functionMap) {

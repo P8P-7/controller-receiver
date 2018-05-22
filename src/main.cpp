@@ -1,9 +1,10 @@
 #include <zmq.hpp>
 #include <boost/asio.hpp>
 #include <boost/asio/serial_port.hpp>
+#include <boost/log/trivial.hpp>
 #include <goliath/bluetooth_controller.h>
-#include <goliath/foundation.h>
 #include <goliath/zmq_messaging.h>
+#include <MessageCarrier.pb.h>
 
 #include "config.h"
 #include "control.h"
@@ -43,12 +44,21 @@ void initControls() {
             FUNCTION_MAP.emplace(JSLY, dualJoystickToMove);
             FUNCTION_MAP.emplace(JSRX, dualJoystickToMove);
             FUNCTION_MAP.emplace(JSRY, dualJoystickToMove);
-            FUNCTION_MAP.emplace(BTN1, buttonToMessage);
-            FUNCTION_MAP.emplace(BTN2, buttonToMessage);
-            FUNCTION_MAP.emplace(BTN3, buttonToMessage);
-            FUNCTION_MAP.emplace(BTN4, buttonToMessage);
+            FUNCTION_MAP.emplace(BTN1, buttonToFrontArm);
+            FUNCTION_MAP.emplace(BTN2, buttonToFrontArm);
+            FUNCTION_MAP.emplace(BTN3, buttonToFrontArm);
+            FUNCTION_MAP.emplace(BTN4, buttonToFrontArm);
             break;
     }
+}
+
+/**
+ * @fn void sendToController()
+ * @brief Sends incoming messages to controller.
+ */
+void sendToController(MessageCarrier messageCarrier) {
+
+    BOOST_LOG_TRIVIAL(debug) << "Sent message to conrtoller.";
 }
 
 /**
@@ -74,8 +84,8 @@ int main(int argc, char **argv) {
     const int BUFFER_SIZE = 1024;
     const char *brokerAdress = "127.0.0.1";
     const char *device = "/dev/rfcomm1";
+    const char *topics[] = {"2"};
     bool stop = false;
-    bool debug = false;
 
     // Command line options
     for (int i = 1; i < argc; ++i) {
@@ -100,24 +110,28 @@ int main(int argc, char **argv) {
                 std::cerr << "--device option requires one argument." << std::endl;
                 return 1;
             }
-        } else if (arg == "--debug") {
-            debug = true;
         }
     }
 
     initConfig();
     initControls();
 
-    // Setup ZMQ publisher
-    zmq::context_t context(2);
-    goliath::messaging::ZmqPublisher pub(context,brokerAdress,5556);
-
     // Setup bluetooth serial connection
     btc::BluetoothController bt(device);
 
+    // Setup ZMQ publisher and subscriber
+    zmq::context_t context(2);
+    goliath::messaging::ZmqPublisher pub(context, brokerAdress, 5556);
+    goliath::messaging::ZmqSubscriber sub(context, brokerAdress, 5556);
+
+    for (const char *topic : topics) {
+        sub.bind(MessageCarrier::kSynchronizeMessage, sendToController);
+    }
+
+
     while (!stop) {
         // Wait for input data from controller
-        std::tuple<std::string, std::string, std::string> input = bt.receive(debug);
+        std::tuple<std::string, std::string, std::string> input = bt.receive();
 
         // Get input type
         TYPE type = stringToType(std::get<0>(input));
@@ -128,23 +142,16 @@ int main(int argc, char **argv) {
                 CONTROL control = stringToControl(std::get<1>(input));
                 int value = stringToValue(std::get<2>(input));
                 MessageCarrier message;
-                if(control < CONTROL_NR_ITEMS){
+                if (control < CONTROL_NR_ITEMS) {
                     message = convertControl(control, value, FUNCTION_MAP);
-                }
-                else{
-                    bt.send(std::make_tuple("-1","-1","-1"));
+                } else {
+                    bt.send(std::make_tuple("-1", "-1", "-1"));
                 }
                 // Send topic to broker
-                if(message.ByteSize() > 0){
+                if (message.ByteSize() > 0) {
                     pub.publish(message);
-                    if (debug) {
-                        std::cerr << "control: " << control << std::endl << "state: "
-                                  << static_cast<int>((float) value * ((float) CONFIGURATION[SENSITIVITY] / 255.0))
-                                  << "\n\n";
-                    }
-                }
-                else if(debug){
-                    std::cerr << "unknown control input\n\n";
+                } else {
+                    BOOST_LOG_TRIVIAL(warning) << "Received invalid controller input.";
                 }
                 break;
             }
@@ -160,17 +167,12 @@ int main(int argc, char **argv) {
                 if (config == MODE) {
                     initControls();
                 }
-
-                if (debug) {
-                    std::cerr << "config: " << config << std::endl << "state: " << value << "\n\n";
-                }
+                BOOST_LOG_TRIVIAL(debug) << "Received config \"" << config << "\" with value \"" << value << "\" from controller.";
                 break;
             }
             default:
                 bt.send(input);
-                if (debug) {
-                    std::cerr << "unknown input\n\n";
-                }
+                BOOST_LOG_TRIVIAL(warning) << "Received invalid message from controller";
                 break;
         }
     }

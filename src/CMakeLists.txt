@@ -4,6 +4,13 @@ SET(SOURCES
         main.cpp
         map.h control.cpp control.h config.h convert.cpp convert.h config.cpp)
 
+find_package(Boost ${BOOST_MIN_VERSION}
+        COMPONENTS
+        log
+        REQUIRED
+        )
+add_definitions(-DBOOST_LOG_DYN_LINK)
+
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(controller_converter

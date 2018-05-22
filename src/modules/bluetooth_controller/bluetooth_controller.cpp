@@ -8,7 +8,7 @@ BluetoothController::BluetoothController(const char *dev) {
     serialPort.set_option(boost::asio::serial_port_base::character_size(8));
 }
 
-std::tuple<std::string, std::string, std::string> BluetoothController::receive(bool debug) {
+std::tuple<std::string, std::string, std::string> BluetoothController::receive() {
     char c;
     auto *buffer = new char[BUFFER_SIZE];
     int i = 0;
@@ -22,7 +22,7 @@ std::tuple<std::string, std::string, std::string> BluetoothController::receive(b
         }
     }
 
-    return convertInput(buffer, debug);
+    return convertInput(buffer);
 }
 
 void BluetoothController::send(std::tuple<std::string, std::string, std::string> values) {
@@ -30,7 +30,7 @@ void BluetoothController::send(std::tuple<std::string, std::string, std::string>
     boost::asio::write(serialPort, boost::asio::buffer(message));
 }
 
-std::tuple<std::string, std::string, std::string> BluetoothController::convertInput(char *buffer, bool debug) {
+std::tuple<std::string, std::string, std::string> BluetoothController::convertInput(char *buffer) {
     std::string command(buffer);
     std::size_t begin_pos = command.find('{');
     std::size_t type_separator_pos = command.find(';');
@@ -46,9 +46,7 @@ std::tuple<std::string, std::string, std::string> BluetoothController::convertIn
         return std::make_tuple(type, key, value);
     }
 
-    if (debug) {
-        std::cerr << command.substr(begin_pos, end_pos + 1) << "\n";
-    }
+    BOOST_LOG_TRIVIAL(warning) << "Invalid message \"" << command.substr(begin_pos, end_pos + 1) << "\" received.";
 
     return std::make_tuple("-1", "-1", "-1");
 }
