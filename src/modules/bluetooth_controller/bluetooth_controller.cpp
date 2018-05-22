@@ -25,9 +25,10 @@ std::tuple<std::string, std::string, std::string> BluetoothController::receive()
     return convertInput(buffer);
 }
 
-void BluetoothController::send(std::tuple<std::string, std::string, std::string> values) {
-    std::string message = "{" + std::get<0>(values) + ";" + std::get<1>(values) + ":" + std::get<2>(values) + "}";
-    boost::asio::write(serialPort, boost::asio::buffer(message));
+void BluetoothController::send(STATUS status, int value) {
+    statusMessage statusMessage(status, value);
+    const char * message = reinterpret_cast<const char *>(&statusMessage);
+    boost::asio::write(serialPort, boost::asio::buffer(message, strlen(message)));
 }
 
 std::tuple<std::string, std::string, std::string> BluetoothController::convertInput(char *buffer) {
@@ -51,3 +52,7 @@ std::tuple<std::string, std::string, std::string> BluetoothController::convertIn
     return std::make_tuple("-1", "-1", "-1");
 }
 
+statusMessage::statusMessage(STATUS stat, int val) {
+    status = stat;
+    value = val;
+}

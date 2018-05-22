@@ -19,3 +19,5 @@ find_package(Protobuf ${PROTOBUF_MIN_VERSION} REQUIRED)
 
 add_subdirectory(third_party)
 add_subdirectory(src)
+
+add_subdirectory(doc)

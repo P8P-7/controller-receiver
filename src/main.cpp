@@ -11,6 +11,7 @@
 #include "map.h"
 #include "convert.h"
 
+
 /**
  * @file main.cpp
  * @author Group 7 - Informatica
@@ -33,13 +34,23 @@ void initConfig() {
  * @brief Initializes receiver mode.
  */
 void initControls() {
-    if (FUNCTION_MAP.size() != 0) {
+    if (!FUNCTION_MAP.empty()) {
         FUNCTION_MAP.clear();
     }
     // Map function to controller input
     switch (CONFIGURATION.find(MODE)->second) {
         default:
         case 0:
+            FUNCTION_MAP.emplace(JSLX, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSLY, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSRX, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSRY, dualJoystickToMove);
+            FUNCTION_MAP.emplace(BTN1, buttonToFrontWing);
+            FUNCTION_MAP.emplace(BTN2, buttonToFrontWing);
+            FUNCTION_MAP.emplace(BTN3, buttonToFrontWing);
+            FUNCTION_MAP.emplace(BTN4, buttonToFrontWing);
+            break;
+        case 1:
             FUNCTION_MAP.emplace(JSLX, dualJoystickToMove);
             FUNCTION_MAP.emplace(JSLY, dualJoystickToMove);
             FUNCTION_MAP.emplace(JSRX, dualJoystickToMove);
@@ -57,7 +68,7 @@ void initControls() {
  * @brief Sends incoming messages to controller.
  */
 void sendToController(MessageCarrier messageCarrier) {
-
+    //TODO convert repo message into data for controller
     BOOST_LOG_TRIVIAL(debug) << "Sent message to conrtoller.";
 }
 
@@ -81,10 +92,9 @@ static void show_usage(std::string name) {
  * @param argv arguments
  */
 int main(int argc, char **argv) {
-    const int BUFFER_SIZE = 1024;
+    const int BUFFER_SIZE = 128;
     const char *brokerAdress = "127.0.0.1";
     const char *device = "/dev/rfcomm1";
-    const char *topics[] = {"2"};
     bool stop = false;
 
     // Command line options
@@ -118,15 +128,14 @@ int main(int argc, char **argv) {
 
     // Setup bluetooth serial connection
     btc::BluetoothController bt(device);
+    bt.send(btc::BT_CONNECTED,0);
 
     // Setup ZMQ publisher and subscriber
     zmq::context_t context(2);
     goliath::messaging::ZmqPublisher pub(context, brokerAdress, 5556);
     goliath::messaging::ZmqSubscriber sub(context, brokerAdress, 5556);
 
-    for (const char *topic : topics) {
-        sub.bind(MessageCarrier::kSynchronizeMessage, sendToController);
-    }
+    sub.bind(MessageCarrier::kSynchronizeMessage, sendToController);
 
 
     while (!stop) {
@@ -145,7 +154,7 @@ int main(int argc, char **argv) {
                 if (control < CONTROL_NR_ITEMS) {
                     message = convertControl(control, value, FUNCTION_MAP);
                 } else {
-                    bt.send(std::make_tuple("-1", "-1", "-1"));
+                    bt.send(btc::BT_INVALID_INPUT,0);
                 }
                 // Send topic to broker
                 if (message.ByteSize() > 0) {
@@ -167,11 +176,12 @@ int main(int argc, char **argv) {
                 if (config == MODE) {
                     initControls();
                 }
-                BOOST_LOG_TRIVIAL(debug) << "Received config \"" << config << "\" with value \"" << value << "\" from controller.";
+                BOOST_LOG_TRIVIAL(debug) << "Received config \"" << config << "\" with value \"" << value
+                                         << "\" from controller.";
                 break;
             }
             default:
-                bt.send(input);
+                bt.send(btc::BT_INVALID_INPUT,0);
                 BOOST_LOG_TRIVIAL(warning) << "Received invalid message from controller";
                 break;
         }

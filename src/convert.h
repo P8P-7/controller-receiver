@@ -50,6 +50,15 @@ MessageCarrier buttonToBackWing(CONTROL control, int value);
 MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std::function<MessageCarrier(CONTROL,int)>> function);
 
 /**
+ * @fn MessageCarrier toMoveWingMessage(ServoCommand_Motor wing, ServoCommand_Direction direction, int speed)
+ * @brief Converts input to Message with MoveWingCommand.
+ * @param wing Wing
+ * @param direction Direction to move the wing in
+ * @param speed Speed to move the wing
+ */
+MessageCarrier toMoveWingMessage(ServoCommand_Motor wing, ServoCommand_Direction direction, int speed);
+
+/**
  * @fn TYPE stringToType (std::string string)
  * @brief Converts type string from controller to TYPE enum
  * @param string Type of input

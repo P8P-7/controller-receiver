@@ -51,10 +51,6 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
 }
 
 MessageCarrier buttonToFrontWing(CONTROL control, int value) {
-    MessageCarrier message;
-    auto *commandMessage(new CommandMessage);
-    auto *moveCommand(new MoveWingCommand);
-
     ServoCommand_Motor wing;
     ServoCommand_Direction direction;
     int speed = 0;
@@ -62,45 +58,29 @@ MessageCarrier buttonToFrontWing(CONTROL control, int value) {
         speed = 512;
     }
 
-    switch (control) {
-        case BTN1:
-            wing = ServoCommand_Motor_LEFT_FRONT;
-            direction = ServoCommand_Direction_UP;
-            break;
-        case BTN2:
-            wing = ServoCommand_Motor_LEFT_FRONT;
-            direction = ServoCommand_Direction_DOWN;
-            break;
-        case BTN3:
-            wing = ServoCommand_Motor_RIGHT_FRONT;
-            direction = ServoCommand_Direction_UP;
-            break;
-        case BTN4:
-            wing = ServoCommand_Motor_RIGHT_FRONT;
-            direction = ServoCommand_Direction_DOWN;
-            break;
-    }
-
-    ServoCommand *wingCommand = moveCommand->add_commands();
-    wingCommand->set_motor(wing);
-    wingCommand->set_speed(speed);
-    wingCommand->set_direction(direction);
-
-    commandMessage->set_allocated_movewingcommand(moveCommand);
-    message.set_allocated_commandmessage(commandMessage);
-
     if(value == 0){
         BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" released.";
     } else{
         BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" pressed.";
     }
-    return message;
+
+    switch (control) {
+        case BTN1:
+            return toMoveWingMessage(ServoCommand_Motor_LEFT_FRONT, ServoCommand_Direction_UP, speed);
+        case BTN2:
+            return toMoveWingMessage(ServoCommand_Motor_LEFT_FRONT, ServoCommand_Direction_DOWN, speed);
+        case BTN3:
+            return toMoveWingMessage(ServoCommand_Motor_RIGHT_FRONT, ServoCommand_Direction_UP, speed);
+        case BTN4:
+            return toMoveWingMessage(ServoCommand_Motor_RIGHT_FRONT, ServoCommand_Direction_DOWN, speed);
+        default:
+            break;
+    }
+
+    return MessageCarrier();
 }
 
 MessageCarrier buttonToBackWing(CONTROL control, int value) {
-    MessageCarrier message;
-    auto *commandMessage(new CommandMessage);
-    auto *moveCommand(new MoveWingCommand);
 
     ServoCommand_Motor wing;
     ServoCommand_Direction direction;
@@ -109,43 +89,46 @@ MessageCarrier buttonToBackWing(CONTROL control, int value) {
         speed = 512;
     }
 
-    switch (control) {
-        case BTN1:
-            wing = ServoCommand_Motor_LEFT_BACK;
-            direction = ServoCommand_Direction_UP;
-            break;
-        case BTN2:
-            wing = ServoCommand_Motor_LEFT_BACK;
-            direction = ServoCommand_Direction_DOWN;
-            break;
-        case BTN3:
-            wing = ServoCommand_Motor_RIGHT_BACK;
-            direction = ServoCommand_Direction_UP;
-            break;
-        case BTN4:
-            wing = ServoCommand_Motor_RIGHT_BACK;
-            direction = ServoCommand_Direction_DOWN;
-            break;
-    }
-
-    ServoCommand *wingCommand = moveCommand->add_commands();
-    wingCommand->set_motor(wing);
-    wingCommand->set_speed(speed);
-    wingCommand->set_direction(direction);
-
-    commandMessage->set_allocated_movewingcommand(moveCommand);
-    message.set_allocated_commandmessage(commandMessage);
-
     if(value == 0){
         BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" released.";
     } else{
         BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" pressed.";
     }
-    return message;
+
+    switch (control) {
+        case BTN1:
+            return toMoveWingMessage(ServoCommand_Motor_LEFT_BACK, ServoCommand_Direction_UP, speed);
+        case BTN2:
+            return toMoveWingMessage(ServoCommand_Motor_LEFT_BACK, ServoCommand_Direction_DOWN, speed);
+        case BTN3:
+            return toMoveWingMessage(ServoCommand_Motor_RIGHT_BACK, ServoCommand_Direction_UP, speed);
+        case BTN4:
+            return toMoveWingMessage(ServoCommand_Motor_RIGHT_BACK, ServoCommand_Direction_DOWN, speed);
+        default:
+            break;
+    }
+
+    return MessageCarrier();
 }
 
 MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std::function<MessageCarrier(CONTROL,int)>> functionMap) {
     return functionMap[control](control,value);
+}
+
+MessageCarrier toMoveWingMessage(ServoCommand_Motor wing, ServoCommand_Direction direction, int speed){
+    MessageCarrier message;
+    auto *commandMessage(new CommandMessage);
+    auto *moveCommand(new MoveWingCommand);
+
+    ServoCommand *wingCommand = moveCommand->add_commands();
+    wingCommand->set_motor(wing);
+    wingCommand->set_speed(speed);
+    wingCommand->set_direction(direction);
+
+    commandMessage->set_allocated_movewingcommand(moveCommand);
+    message.set_allocated_commandmessage(commandMessage);
+
+    return message;
 }
 
 TYPE stringToType(std::string string) {
