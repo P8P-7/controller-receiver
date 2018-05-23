@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['connect',['connect',['../classgoliath_1_1messaging_1_1ZmqIo.html#a74cd7fb581cba80d725269183612cf2b',1,'goliath::messaging::ZmqIo']]]
+  ['main',['main',['../main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main.cpp']]]
 ];

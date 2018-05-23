@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getconfig',['getConfig',['../map_8h.html#a9900849ee08740bea4b6e81655103e0b',1,'map.cpp']]]
+  ['setconfig',['setConfig',['../map_8h.html#aab9f8e3b828fa42072d47012fdee41ea',1,'map.cpp']]]
 ];

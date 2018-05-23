@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['initconfig',['initConfig',['../map_8h.html#a5af1011f0f921aef06ecdfc27d7bf791',1,'map.cpp']]],
-  ['initcontrols',['initControls',['../main_8cpp.html#ade2ac8db32081bbf24ad4ec0b505910e',1,'main.cpp']]]
+  ['setconfig',['setConfig',['../map_8h.html#aab9f8e3b828fa42072d47012fdee41ea',1,'map.cpp']]],
+  ['status',['STATUS',['../namespacegoliath_1_1btc.html#ac33fb361fc5d52f717d9a08a5132b8a4',1,'goliath::btc']]],
+  ['statusmessage',['statusMessage',['../structgoliath_1_1btc_1_1statusMessage.html',1,'goliath::btc']]]
 ];

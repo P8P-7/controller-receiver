@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['connect',['connect',['../classgoliath_1_1messaging_1_1ZmqIo.html#a74cd7fb581cba80d725269183612cf2b',1,'goliath::messaging::ZmqIo']]]
+  ['initconfig',['initConfig',['../map_8h.html#a5af1011f0f921aef06ecdfc27d7bf791',1,'map.cpp']]],
+  ['initcontrols',['initControls',['../main_8cpp.html#ade2ac8db32081bbf24ad4ec0b505910e',1,'main.cpp']]]
 ];
