@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['start',['start',['../classgoliath_1_1messaging_1_1ZmqSubscriber.html#a539e2c1be4f787bc31c16043a008dd26',1,'goliath::messaging::ZmqSubscriber']]],
-  ['stop',['stop',['../classgoliath_1_1messaging_1_1ZmqSubscriber.html#ae3fd22868c3094fde0981ae266314194',1,'goliath::messaging::ZmqSubscriber']]]
+  ['publish',['publish',['../classgoliath_1_1messaging_1_1ZmqPublisher.html#ac88469990306f8774a5b5607ba6e7c32',1,'goliath::messaging::ZmqPublisher']]]
 ];

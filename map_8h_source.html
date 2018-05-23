@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -98,9 +98,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;config.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;control.h&quot;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">static</span> std::map&lt;CONTROL, std::function&lt;MessageCarrier(CONTROL,int)&gt;&gt; FUNCTION_MAP;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keywordtype">void</span> <a class="code" href="map_8h.html#a5af1011f0f921aef06ecdfc27d7bf791">initConfig</a>();</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">static</span> std::map&lt;CONFIG, int&gt; CONFIGURATION;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">int</span> <a class="code" href="map_8h.html#a9900849ee08740bea4b6e81655103e0b">getConfig</a>(CONFIG config);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">void</span> <a class="code" href="map_8h.html#aab9f8e3b828fa42072d47012fdee41ea">setConfig</a>(CONFIG config, <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">static</span> std::map&lt;CONTROL, std::function&lt;MessageCarrier(CONTROL,int)&gt;&gt; FUNCTION_MAP;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">static</span> std::map&lt;CONFIG, int&gt; CONFIGURATION;</div>
+<div class="ttc" id="map_8h_html_aab9f8e3b828fa42072d47012fdee41ea"><div class="ttname"><a href="map_8h.html#aab9f8e3b828fa42072d47012fdee41ea">setConfig</a></div><div class="ttdeci">void setConfig(CONFIG config, int value)</div><div class="ttdoc">Get config value. </div><div class="ttdef"><b>Definition:</b> map.cpp:13</div></div>
+<div class="ttc" id="map_8h_html_a9900849ee08740bea4b6e81655103e0b"><div class="ttname"><a href="map_8h.html#a9900849ee08740bea4b6e81655103e0b">getConfig</a></div><div class="ttdeci">int getConfig(CONFIG config)</div><div class="ttdoc">Get config value. </div><div class="ttdef"><b>Definition:</b> map.cpp:9</div></div>
+<div class="ttc" id="map_8h_html_a5af1011f0f921aef06ecdfc27d7bf791"><div class="ttname"><a href="map_8h.html#a5af1011f0f921aef06ecdfc27d7bf791">initConfig</a></div><div class="ttdeci">void initConfig()</div><div class="ttdoc">Initializes controller configuration. </div><div class="ttdef"><b>Definition:</b> map.cpp:3</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

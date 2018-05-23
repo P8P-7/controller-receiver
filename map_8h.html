@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -86,6 +86,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">map.h File Reference</div>  </div>
 </div><!--header-->
@@ -97,9 +99,83 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &quot;control.h&quot;</code><br/>
 </div>
 <p><a href="map_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a5af1011f0f921aef06ecdfc27d7bf791"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5af1011f0f921aef06ecdfc27d7bf791"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#a5af1011f0f921aef06ecdfc27d7bf791">initConfig</a> ()</td></tr>
+<tr class="memdesc:a5af1011f0f921aef06ecdfc27d7bf791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes controller configuration. <br/></td></tr>
+<tr class="separator:a5af1011f0f921aef06ecdfc27d7bf791"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9900849ee08740bea4b6e81655103e0b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#a9900849ee08740bea4b6e81655103e0b">getConfig</a> (CONFIG config)</td></tr>
+<tr class="memdesc:a9900849ee08740bea4b6e81655103e0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get config value.  <a href="#a9900849ee08740bea4b6e81655103e0b">More...</a><br/></td></tr>
+<tr class="separator:a9900849ee08740bea4b6e81655103e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab9f8e3b828fa42072d47012fdee41ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#aab9f8e3b828fa42072d47012fdee41ea">setConfig</a> (CONFIG config, int value)</td></tr>
+<tr class="memdesc:aab9f8e3b828fa42072d47012fdee41ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get config value.  <a href="#aab9f8e3b828fa42072d47012fdee41ea">More...</a><br/></td></tr>
+<tr class="separator:aab9f8e3b828fa42072d47012fdee41ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Group 7 - Informatica </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a9900849ee08740bea4b6e81655103e0b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int getConfig </td>
+          <td>(</td>
+          <td class="paramtype">CONFIG&#160;</td>
+          <td class="paramname"><em>config</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get config value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">config</td><td>CONFIG where you want to get the value for. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aab9f8e3b828fa42072d47012fdee41ea"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setConfig </td>
+          <td>(</td>
+          <td class="paramtype">CONFIG&#160;</td>
+          <td class="paramname"><em>config</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get config value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">config</td><td>config you want to change the set of. </td></tr>
+    <tr><td class="paramname">value</td><td>value to set for config. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

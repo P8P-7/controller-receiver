@@ -11,8 +11,9 @@ var indexSectionsWithContent =
   1: "bsz",
   2: "g",
   3: "bmz",
-  4: "abcimpsz",
-  5: "p"
+  4: "abcgimpsz",
+  5: "p",
+  6: "s"
 };
 
 var indexSectionNames =
@@ -22,7 +23,8 @@ var indexSectionNames =
   2: "namespaces",
   3: "files",
   4: "functions",
-  5: "variables"
+  5: "variables",
+  6: "enums"
 };
 
 function convertToId(search)
