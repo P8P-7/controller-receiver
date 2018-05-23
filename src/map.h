@@ -12,6 +12,27 @@
  */
 
 /**
+ * @fn void initConfig()
+ * @brief Initializes controller configuration.
+ */
+void initConfig();
+
+/**
+ * @fn int getConfig(CONFIG config)
+ * @brief Get config value.
+ * @param config CONFIG where you want to get the value for.
+ */
+int getConfig(CONFIG config);
+
+/**
+ * @fn void setConfig(CONFIG config, int value)
+ * @brief Get config value.
+ * @param config config you want to change the set of.
+ * @param value value to set for config.
+ */
+void setConfig(CONFIG config, int value);
+
+/**
  * @var std::map<CONTROL, std::function<Message(CONTROL,int)>> FUNCTION_MAP
  * @brief function to input map
  */

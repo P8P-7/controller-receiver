@@ -10,10 +10,10 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
             MotorCommand_Motor_LEFT_BACK
     };
 
-    BOOST_LOG_TRIVIAL(debug) << "Axis \"" << control << "\" moved to \"" << value << "\".";
+//    BOOST_LOG_TRIVIAL(debug) << "Axis \"" << control << "\" moved to \"" << value << "\".";
 
     // Apply sensitivity
-    value = value * CONFIGURATION[SENSITIVITY] / 255;
+    value = value * getConfig(SENSITIVITY) / 255;
 
     // Select gear
     if (value < 0) {

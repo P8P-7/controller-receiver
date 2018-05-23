@@ -17,6 +17,10 @@
 
 namespace goliath::btc {
 
+   /**
+   * @var enum STATUS
+   * @brief enum for all status updates to controller
+   */
     enum STATUS {
         BT_CONNECTED,
         BT_INVALID_INPUT,

@@ -20,16 +20,6 @@
 using namespace goliath;
 
 /**
- * @fn void initConfig()
- * @brief Initializes controller configuration.
- */
-void initConfig() {
-    // Map function to controller input
-    CONFIGURATION.emplace(MODE, 0);
-    CONFIGURATION.emplace(SENSITIVITY, 255);
-}
-
-/**
  * @fn void initControls()
  * @brief Initializes receiver mode.
  */
@@ -38,7 +28,7 @@ void initControls() {
         FUNCTION_MAP.clear();
     }
     // Map function to controller input
-    switch (CONFIGURATION.find(MODE)->second) {
+    switch (getConfig(MODE)) {
         default:
         case 0:
             FUNCTION_MAP.emplace(JSLX, dualJoystickToMove);
@@ -170,7 +160,7 @@ int main(int argc, char **argv) {
                 int value = stringToValue(std::get<2>(input));
 
                 // Set config
-                CONFIGURATION[config] = value;
+                setConfig(config,value);
 
                 // Reset controls when mode changes
                 if (config == MODE) {

@@ -2,7 +2,7 @@ add_subdirectory(modules)
 
 SET(SOURCES
         main.cpp
-        map.h control.cpp control.h config.h convert.cpp convert.h config.cpp)
+        map.h control.cpp control.h config.h convert.cpp convert.h config.cpp map.cpp)
 
 find_package(Boost ${BOOST_MIN_VERSION}
         COMPONENTS
