@@ -132,5 +132,5 @@ MessageCarrier toMoveWingMessage(ServoCommand_Motor wing, ServoCommand_Direction
 }
 
 TYPE stringToType(std::string string) {
-    return static_cast<TYPE>(atoi(string.c_str()));
+    return static_cast<TYPE>(std::stoi(string.c_str()));
 }

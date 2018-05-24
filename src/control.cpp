@@ -5,5 +5,5 @@ CONTROL stringToControl(std::string string) {
 }
 
 int stringToValue(std::string string) {
-    return atoi(string.c_str());
+    return std::stoi(string.c_str());
 }

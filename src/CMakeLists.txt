@@ -21,3 +21,5 @@ target_link_libraries(${PROJECT_NAME}
         ${Boost_SYSTEM_LIBRARY}
         ${cppzmq_LIBRARY}
         ${Protobuf_LIBRARY})
+
+configure_file(resources/converter-text.txt ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/converter-text.txt COPYONLY)
