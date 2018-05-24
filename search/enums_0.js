@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['status',['STATUS',['../namespacegoliath_1_1btc.html#ac33fb361fc5d52f717d9a08a5132b8a4',1,'goliath::btc']]]
+  ['status',['Status',['../namespacegoliath_1_1btc.html#a899b26c5ac9b2abbb01cb9f639490788',1,'goliath::btc']]]
 ];

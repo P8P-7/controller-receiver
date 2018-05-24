@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getconfig',['getConfig',['../map_8h.html#a9900849ee08740bea4b6e81655103e0b',1,'map.cpp']]]
+  ['bluetoothcontroller',['BluetoothController',['../classgoliath_1_1btc_1_1BluetoothController.html#a30b8696c959c05d086424c6b1002b6eb',1,'goliath::btc::BluetoothController']]]
 ];

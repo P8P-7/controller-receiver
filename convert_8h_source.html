@@ -101,21 +101,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="map_8h.html">map.h</a>&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">enum</span> TYPE {</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    CONTROL_TYPE = 0,</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    CONFIG_TYPE = 1,</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;};</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;MessageCarrier dualJoystickToMove(CONTROL control, <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;MessageCarrier buttonToFrontWing(CONTROL control, <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;MessageCarrier buttonToBackWing(CONTROL control, <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;MessageCarrier convertControl(CONTROL control, <span class="keywordtype">int</span> value, std::map&lt;CONTROL, std::function&lt;MessageCarrier(CONTROL,<span class="keywordtype">int</span>)&gt;&gt; <span class="keyword">function</span>);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;MessageCarrier toMoveWingMessage(ServoCommand_Motor wing, ServoCommand_Direction direction, <span class="keywordtype">int</span> speed);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;TYPE stringToType (std::string <span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    CONTROL_TYPE,</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    CONFIG_TYPE,</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    LASTSTATUS_TYPE</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;};</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;MessageCarrier dualJoystickToMove(CONTROL control, <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;MessageCarrier buttonToFrontWing(CONTROL control, <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;MessageCarrier buttonToBackWing(CONTROL control, <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;MessageCarrier convertControl(CONTROL control, <span class="keywordtype">int</span> value, std::map&lt;CONTROL, std::function&lt;MessageCarrier(CONTROL,<span class="keywordtype">int</span>)&gt;&gt; <span class="keyword">function</span>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;MessageCarrier toMoveWingMessage(ServoCommand_Motor wing, ServoCommand_Direction direction, <span class="keywordtype">int</span> speed);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;TYPE stringToType (std::string <span class="keywordtype">string</span>);</div>
 <div class="ttc" id="map_8h_html"><div class="ttname"><a href="map_8h.html">map.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

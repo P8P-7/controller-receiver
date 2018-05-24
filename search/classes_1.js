@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['statusmessage',['statusMessage',['../structgoliath_1_1btc_1_1statusMessage.html',1,'goliath::btc']]]
+  ['statusmessage',['StatusMessage',['../structgoliath_1_1btc_1_1StatusMessage.html',1,'goliath::btc']]]
 ];
