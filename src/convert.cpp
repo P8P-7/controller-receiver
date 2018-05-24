@@ -6,14 +6,13 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
     auto *moveCommand(new MoveCommand);
     MotorCommand_Gear gear;
     MotorCommand_Motor motors[] {
-            MotorCommand_Motor_LEFT_FRONT,
-            MotorCommand_Motor_LEFT_BACK
+            MotorCommand_Motor_LEFT_FRONT
     };
 
 //    BOOST_LOG_TRIVIAL(debug) << "Axis \"" << control << "\" moved to \"" << value << "\".";
 
     // Apply sensitivity
-    value = value * getConfig(SENSITIVITY) / 255;
+    value = value * getConfig(SENSITIVITY) / 255 / 2;
 
     // Select gear
     if (value < 0) {
@@ -27,10 +26,11 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
     // Select motors
     if (control == JSLX || control == JSLY) {
         motors[0] = MotorCommand_Motor_LEFT_FRONT;
-        motors[1] = MotorCommand_Motor_LEFT_BACK;
+//        motors[1] = MotorCommand_Motor_LEFT_BACK;
     } else if (control == JSRX || control == JSRY){
-        motors[0] = MotorCommand_Motor_RIGHT_FRONT;
-        motors[1] = MotorCommand_Motor_RIGHT_BACK;
+        motors[0] = MotorCommand_Motor_LEFT_FRONT;
+//        motors[0] = MotorCommand_Motor_RIGHT_FRONT;
+//        motors[1] = MotorCommand_Motor_RIGHT_BACK;
     }
 
     // Add motor commands to single move command

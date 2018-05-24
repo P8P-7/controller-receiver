@@ -4,6 +4,7 @@
 #include <boost/log/trivial.hpp>
 #include <goliath/bluetooth_controller.h>
 #include <goliath/zmq_messaging.h>
+#include <goliath/foundation.h>
 #include <MessageCarrier.pb.h>
 
 #include "config.h"
@@ -26,6 +27,7 @@ using namespace goliath;
 void initControls() {
     if (!FUNCTION_MAP.empty()) {
         FUNCTION_MAP.clear();
+        BOOST_LOG_TRIVIAL(info) << "Changed to mode " << getConfig(MODE);
     }
     // Map function to controller input
     switch (getConfig(MODE)) {
@@ -82,6 +84,9 @@ static void show_usage(std::string name) {
  * @param argv arguments
  */
 int main(int argc, char **argv) {
+    BOOST_LOG_TRIVIAL(info) << "Starting Controller Converter.";
+    goliath::util::Console console(&goliath::util::colorConsoleFormatter, "");
+
     const int BUFFER_SIZE = 128;
     const char *brokerAdress = "127.0.0.1";
     const char *device = "/dev/rfcomm1";
@@ -118,7 +123,9 @@ int main(int argc, char **argv) {
 
     // Setup bluetooth serial connection
     btc::BluetoothController bt(device);
-    bt.send(btc::BT_CONNECTED,0);
+    bt.clear();
+    bt.send(btc::Status::BT_CONNECTED, 0);
+    BOOST_LOG_TRIVIAL(info) << "Connected to controller.";
 
     // Setup ZMQ publisher and subscriber
     zmq::context_t context(2);
@@ -144,13 +151,16 @@ int main(int argc, char **argv) {
                 if (control < CONTROL_NR_ITEMS) {
                     message = convertControl(control, value, FUNCTION_MAP);
                 } else {
-                    bt.send(btc::BT_INVALID_INPUT,0);
+                    bt.send(btc::Status::BT_INVALID_INPUT, 0);
                 }
                 // Send topic to broker
                 if (message.ByteSize() > 0) {
                     pub.publish(message);
                 } else {
                     BOOST_LOG_TRIVIAL(warning) << "Received invalid controller input.";
+                }
+                if (control == BTN1 && value == 1) {
+                    bt.send(btc::Status::BT_BATTERY, rand()%100+1);
                 }
                 break;
             }
@@ -160,7 +170,7 @@ int main(int argc, char **argv) {
                 int value = stringToValue(std::get<2>(input));
 
                 // Set config
-                setConfig(config,value);
+                setConfig(config, value);
 
                 // Reset controls when mode changes
                 if (config == MODE) {
@@ -170,8 +180,13 @@ int main(int argc, char **argv) {
                                          << "\" from controller.";
                 break;
             }
+            case LASTSTATUS_TYPE: {
+                bt.sendLast();
+                BOOST_LOG_TRIVIAL(debug) << "Sent last status to controller";
+                break;
+            }
             default:
-                bt.send(btc::BT_INVALID_INPUT,0);
+                bt.send(btc::Status::BT_INVALID_INPUT, 0);
                 BOOST_LOG_TRIVIAL(warning) << "Received invalid message from controller";
                 break;
         }

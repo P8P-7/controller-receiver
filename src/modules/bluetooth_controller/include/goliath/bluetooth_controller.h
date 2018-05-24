@@ -18,20 +18,22 @@
 namespace goliath::btc {
 
    /**
-   * @var enum STATUS
    * @brief enum for all status updates to controller
    */
-    enum STATUS {
+    enum class Status : std::uint8_t {
         BT_CONNECTED,
         BT_INVALID_INPUT,
         BT_BATTERY,
     };
 
-    struct statusMessage {
-        statusMessage(STATUS status, int value);
+    struct StatusMessage {
+        StatusMessage();
+        StatusMessage(Status status, short value);
+        void set(Status status, short value);
 
-        STATUS status;
-        int value;
+        Status status;
+        short value;
+        bool isSet = false;
     };
 
     /**
@@ -40,19 +42,21 @@ namespace goliath::btc {
     class BluetoothController {
     public:
         /**
-        * @fn goliath::btc::BluetoothController(const char *dev)
         * @brief Constructor
-         * @param dev Path to bluetooth serial device
+        * @param dev Path to bluetooth serial device
         */
-        BluetoothController(const char *dev);
+        BluetoothController(const std::string &devicePath);
 
         /**
-        * @fn tuple<std::string, std::string, std::string> goliath::btc::std::receive()
         * @brief Wait for input to be received
         */
         std::tuple<std::string, std::string, std::string> receive();
 
-        void send(STATUS status, int value);
+        void send(Status status, short value);
+
+        void sendLast();
+
+        void clear();
 
     private:
         std::tuple<std::string, std::string, std::string> convertInput(char buffer[]);
@@ -60,5 +64,6 @@ namespace goliath::btc {
         boost::asio::io_service io;
         boost::asio::serial_port serialPort = boost::asio::serial_port(io);
         const int BUFFER_SIZE = 1024;
+        StatusMessage lastMessage = StatusMessage((Status)0,0);
     };
 }

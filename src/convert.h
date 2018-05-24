@@ -13,8 +13,9 @@
  * @brief enum for all input types
  */
 enum TYPE {
-    CONTROL_TYPE = 0,
-    CONFIG_TYPE = 1,
+    CONTROL_TYPE,
+    CONFIG_TYPE,
+    LASTSTATUS_TYPE
 };
 
 /**

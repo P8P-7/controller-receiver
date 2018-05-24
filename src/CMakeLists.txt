@@ -13,7 +13,7 @@ add_definitions(-DBOOST_LOG_DYN_LINK)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(controller_converter
+target_link_libraries(${PROJECT_NAME}
         goliath-proto
         goliath-foundation-module
         goliath-zmq-messaging-module

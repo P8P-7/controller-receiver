@@ -7,8 +7,8 @@
  * @brief enum for all configurations
  */
 enum CONFIG {
-    MODE = 0,
-    SENSITIVITY = 1,
+    MODE,
+    SENSITIVITY,
 };
 
 /**

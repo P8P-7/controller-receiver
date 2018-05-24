@@ -2,8 +2,8 @@
 
 using namespace goliath::btc;
 
-BluetoothController::BluetoothController(const char *dev) {
-    serialPort.open(dev);
+BluetoothController::BluetoothController(const std::string &devicePath) {
+    serialPort.open(devicePath);
     serialPort.set_option(boost::asio::serial_port_base::baud_rate(9600)); // Default for bluetooth
     serialPort.set_option(boost::asio::serial_port_base::character_size(8));
 }
@@ -25,10 +25,26 @@ std::tuple<std::string, std::string, std::string> BluetoothController::receive()
     return convertInput(buffer);
 }
 
-void BluetoothController::send(STATUS status, int value) {
-    statusMessage statusMessage(status, value);
-    const char * message = reinterpret_cast<const char *>(&statusMessage);
-    boost::asio::write(serialPort, boost::asio::buffer(message, strlen(message)));
+void BluetoothController::send(Status status, short value) {
+    lastMessage.set(status,value);
+
+    std::ostringstream oss;
+    oss << "{" << static_cast<int>(status) << ":" << value << "}";
+    std::string message = oss.str();
+
+    boost::asio::write(serialPort, boost::asio::buffer(message));
+
+    BOOST_LOG_TRIVIAL(debug) << "Sent status message \"" << message << "\"";
+}
+
+void BluetoothController::sendLast() {
+    if(lastMessage.isSet) {
+        std::ostringstream oss;
+        oss << "{" << static_cast<int>(lastMessage.status) << ":" << lastMessage.value << "}";
+        std::string message = oss.str();
+
+        boost::asio::write(serialPort, boost::asio::buffer(message));
+    }
 }
 
 std::tuple<std::string, std::string, std::string> BluetoothController::convertInput(char *buffer) {
@@ -52,7 +68,28 @@ std::tuple<std::string, std::string, std::string> BluetoothController::convertIn
     return std::make_tuple("-1", "-1", "-1");
 }
 
-statusMessage::statusMessage(STATUS stat, int val) {
+void BluetoothController::clear() {
+    if (0 == ::tcflush(serialPort.lowest_layer().native_handle(), TCIOFLUSH)) {
+        boost::system::error_code();
+    } else {
+        boost::system::error_code(errno, boost::asio::error::get_system_category());
+    }
+    BOOST_LOG_TRIVIAL(info) << "Serial buffer flushed.";
+}
+
+StatusMessage::StatusMessage(Status stat, short val) {
     status = stat;
     value = val;
 }
+
+void StatusMessage::set(Status stat, short val) {
+    status = stat;
+    value = val;
+    isSet = true;
+}
+
+StatusMessage::StatusMessage() {
+    status = Status::BT_CONNECTED;
+    value = 0;
+}
+
