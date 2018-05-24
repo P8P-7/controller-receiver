@@ -34,7 +34,7 @@ void BluetoothController::send(Status status, short value) {
 
     boost::asio::write(serialPort, boost::asio::buffer(message));
 
-    BOOST_LOG_TRIVIAL(debug) << "Sent status message \"" << message << "\"";
+    BOOST_LOG_TRIVIAL(debug) << "Sent status message \"" << message << "\" to controller.";
 }
 
 void BluetoothController::sendLast() {

@@ -159,9 +159,6 @@ int main(int argc, char **argv) {
                 } else {
                     BOOST_LOG_TRIVIAL(warning) << "Received invalid controller input.";
                 }
-                if (control == BTN1 && value == 1) {
-                    bt.send(btc::Status::BT_BATTERY, rand()%100+1);
-                }
                 break;
             }
             case CONFIG_TYPE: {
