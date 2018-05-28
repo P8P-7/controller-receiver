@@ -85,7 +85,7 @@ static void show_usage(std::string name) {
  */
 int main(int argc, char **argv) {
     BOOST_LOG_TRIVIAL(info) << "Starting Controller Converter.";
-    goliath::util::Console console(&goliath::util::colorConsoleFormatter, "converter-text.txt");
+    goliath::util::Console console(&goliath::util::colorConsoleFormatter, argv[0], "converter-text.txt");
 
     const int BUFFER_SIZE = 128;
     const char *brokerAdress = "127.0.0.1";
