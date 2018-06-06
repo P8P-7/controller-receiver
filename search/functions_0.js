@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bluetoothcontroller',['BluetoothController',['../classgoliath_1_1btc_1_1BluetoothController.html#a30b8696c959c05d086424c6b1002b6eb',1,'goliath::btc::BluetoothController']]]
+  ['bluetoothcontroller',['BluetoothController',['../classgoliath_1_1btc_1_1BluetoothController.html#ab57f1bfa9a0efb3fb37e8bd56bd21f37',1,'goliath::btc::BluetoothController']]]
 ];

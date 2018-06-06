@@ -97,9 +97,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a30b8696c959c05d086424c6b1002b6eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgoliath_1_1btc_1_1BluetoothController.html#a30b8696c959c05d086424c6b1002b6eb">BluetoothController</a> (const std::string &amp;devicePath)</td></tr>
-<tr class="memdesc:a30b8696c959c05d086424c6b1002b6eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a30b8696c959c05d086424c6b1002b6eb">More...</a><br/></td></tr>
-<tr class="separator:a30b8696c959c05d086424c6b1002b6eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab57f1bfa9a0efb3fb37e8bd56bd21f37"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgoliath_1_1btc_1_1BluetoothController.html#ab57f1bfa9a0efb3fb37e8bd56bd21f37">BluetoothController</a> (const std::string &amp;devicePath, std::string &amp;newDeviceAddress)</td></tr>
+<tr class="memdesc:ab57f1bfa9a0efb3fb37e8bd56bd21f37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#ab57f1bfa9a0efb3fb37e8bd56bd21f37">More...</a><br/></td></tr>
+<tr class="separator:ab57f1bfa9a0efb3fb37e8bd56bd21f37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81da0f5bcf28c8ea5984332c7d7ec8ef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a81da0f5bcf28c8ea5984332c7d7ec8ef"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>connect</b> ()</td></tr>
+<tr class="separator:a81da0f5bcf28c8ea5984332c7d7ec8ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada34074a3a06520217987327716d593f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada34074a3a06520217987327716d593f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reconnect</b> ()</td></tr>
+<tr class="separator:ada34074a3a06520217987327716d593f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e0a45e3744bcca04b7bf496e39d60e2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e0a45e3744bcca04b7bf496e39d60e2"></a>
 std::tuple&lt; std::string, <br class="typebreak"/>
 std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgoliath_1_1btc_1_1BluetoothController.html#a3e0a45e3744bcca04b7bf496e39d60e2">receive</a> ()</td></tr>
@@ -114,9 +120,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>sendLast</b> ()</td><
 <tr class="memitem:a12cf5e87a77caa7b18cf725ca7eb0b3a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a12cf5e87a77caa7b18cf725ca7eb0b3a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
 <tr class="separator:a12cf5e87a77caa7b18cf725ca7eb0b3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d763d660c724f76bbd23619bafdd34b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6d763d660c724f76bbd23619bafdd34b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>connected</b> ()</td></tr>
+<tr class="separator:a6d763d660c724f76bbd23619bafdd34b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a30b8696c959c05d086424c6b1002b6eb"></a>
+<a class="anchor" id="ab57f1bfa9a0efb3fb37e8bd56bd21f37"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -124,8 +133,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr
           <td class="memname">BluetoothController::BluetoothController </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>devicePath</em></td><td>)</td>
+          <td class="paramname"><em>devicePath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>newDeviceAddress</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
