@@ -1,15 +1,16 @@
+#include <deque>
 #include "convert.h"
+
+MessageCarrier ignoreInput(CONTROL control, int value) {
+    return MessageCarrier();
+}
 
 MessageCarrier dualJoystickToMove(CONTROL control, int value) {
     MessageCarrier message;
     auto *commandMessage(new CommandMessage);
     auto *moveCommand(new MoveCommand);
     MotorCommand_Gear gear;
-    MotorCommand_Motor motors[] {
-            MotorCommand_Motor_LEFT_FRONT
-    };
-
-//    BOOST_LOG_TRIVIAL(debug) << "Axis \"" << control << "\" moved to \"" << value << "\".";
+    std::deque<MotorCommand_Motor> motors;
 
     // Apply sensitivity
     value = value * getConfig(SENSITIVITY) / 255 / 2;
@@ -24,13 +25,12 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
     }
 
     // Select motors
-    if (control == JSLX || control == JSLY) {
-        motors[0] = MotorCommand_Motor_LEFT_FRONT;
-//        motors[1] = MotorCommand_Motor_LEFT_BACK;
-    } else if (control == JSRX || control == JSRY){
-        motors[0] = MotorCommand_Motor_LEFT_FRONT;
-//        motors[0] = MotorCommand_Motor_RIGHT_FRONT;
-//        motors[1] = MotorCommand_Motor_RIGHT_BACK;
+    if (control == JSLY) {
+        motors.emplace_back(MotorCommand_Motor_LEFT_FRONT);
+        motors.emplace_back(MotorCommand_Motor_LEFT_BACK);
+    } else if (control == JSRY){
+        motors.emplace_back(MotorCommand_Motor_RIGHT_FRONT);
+        motors.emplace_back(MotorCommand_Motor_RIGHT_BACK);
     }
 
     // Add motor commands to single move command
@@ -38,7 +38,7 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
         MotorCommand *motorCommand = moveCommand->add_commands();
         motorCommand->set_motor(motor);
         motorCommand->set_gear(gear);
-        motorCommand->set_speed(value);
+        motorCommand->set_speed(abs(value));
     }
 
     // Put move command in a message
@@ -112,7 +112,10 @@ MessageCarrier buttonToBackWing(CONTROL control, int value) {
 }
 
 MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std::function<MessageCarrier(CONTROL,int)>> functionMap) {
-    return functionMap[control](control,value);
+    if(functionMap[control] != NULL) {
+        return functionMap[control](control, value);
+    }
+    return MessageCarrier();
 }
 
 MessageCarrier toMoveWingMessage(ServoCommand_Motor wing, ServoCommand_Direction direction, int speed){

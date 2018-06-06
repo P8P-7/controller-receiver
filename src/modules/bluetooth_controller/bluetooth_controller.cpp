@@ -2,10 +2,84 @@
 
 using namespace goliath::btc;
 
-BluetoothController::BluetoothController(const std::string &devicePath) {
-    serialPort.open(devicePath);
+BluetoothController::BluetoothController(const std::string &newDevicePath, std::string &newDeviceAddress) {
+    devicePath = newDevicePath.c_str();
+    deviceAddress = newDeviceAddress.c_str();
+
+    BOOST_LOG_TRIVIAL(info) << "Connecting to " << deviceAddress.c_str() << " on " << devicePath;
+
+    while (!connect()) {
+        BOOST_LOG_TRIVIAL(error) << "Could not connect to controller, retying...";
+    };
+
+    BOOST_LOG_TRIVIAL(info) << "Connected to controller.";
+
     serialPort.set_option(boost::asio::serial_port_base::baud_rate(9600)); // Default for bluetooth
     serialPort.set_option(boost::asio::serial_port_base::character_size(8));
+}
+
+bool BluetoothController::connect() {
+    int nTries = 5;
+
+    std::ostringstream oss;
+    oss << "rfcomm connect hci0 " << deviceAddress << " > /dev/null 2>&1 &";
+    std::string cmd = oss.str();
+
+    BOOST_LOG_TRIVIAL(debug) << "\"" << cmd.c_str() << "\" executed";
+
+    system("pkill rfcomm");
+    system(cmd.c_str());
+
+    for (int i = 0; i < nTries; i++) {
+        if (connected()) {
+            if(!serialPort.is_open()) {
+                serialPort.open(devicePath);
+            }
+            return true;
+        }
+        sleep(2);
+    }
+
+    return false;
+}
+
+void BluetoothController::reconnect() {
+    if(serialPort.is_open()){
+        serialPort.close();
+    }
+
+    BOOST_LOG_TRIVIAL(info) << "Reconnecting to " << deviceAddress.c_str() << " on " << devicePath;
+
+    while (!connect()) {
+        BOOST_LOG_TRIVIAL(error) << "Could not reconnect to controller, retying...";
+    };
+
+    clear();
+
+    BOOST_LOG_TRIVIAL(info) << "Reconnected to controller.";
+}
+
+bool BluetoothController::connected() {
+    if (access(devicePath, W_OK) == -1) {
+        return false;
+    };
+
+    if (!serialPort.is_open()) {
+        serialPort.open(devicePath);
+        serialPort.set_option(boost::asio::serial_port_base::baud_rate(9600)); // Default for bluetooth
+        serialPort.set_option(boost::asio::serial_port_base::character_size(8));
+    }
+
+    const boost::system::error_code ec;
+
+    boost::asio::write(serialPort, boost::asio::buffer("write_test"));
+
+    serialPort.close();
+
+    if (ec) {
+        return false;
+    }
+    return true;
 }
 
 std::tuple<std::string, std::string, std::string> BluetoothController::receive() {
@@ -13,37 +87,64 @@ std::tuple<std::string, std::string, std::string> BluetoothController::receive()
     auto *buffer = new char[BUFFER_SIZE];
     int i = 0;
 
-    // Read commands from serial
-    while (boost::asio::read(serialPort, boost::asio::buffer(&c, 1)) == 1) {
-        buffer[i++] = c;
+    try {
+        // Read commands from serial
+        while (boost::asio::read(serialPort, boost::asio::buffer(&c, 1)) == 1) {
+            buffer[i++] = c;
 
-        if (c == '}') {
-            break; // End of command
+            if (c == '}') {
+                break; // End of command
+            }
         }
+    } catch (const boost::system::system_error &ex) {
+        return std::make_tuple("-2", "-2", "-2");
     }
 
     return convertInput(buffer);
 }
 
 void BluetoothController::send(Status status, short value) {
-    lastMessage.set(status,value);
+    boost::system::error_code error;
 
-    std::ostringstream oss;
-    oss << "{" << static_cast<int>(status) << ":" << value << "}";
-    std::string message = oss.str();
+    try {
+        lastMessage.set(status, value);
 
-    boost::asio::write(serialPort, boost::asio::buffer(message));
+        std::ostringstream oss;
+        oss << "{" << static_cast<int>(status) << ":" << value << "}";
+        std::string message = oss.str();
 
-    BOOST_LOG_TRIVIAL(debug) << "Sent status message \"" << message << "\" to controller.";
+        boost::asio::write(serialPort, boost::asio::buffer(message), error);
+
+        if (error) {
+            BOOST_LOG_TRIVIAL(error) << error.message().c_str();
+            return;
+        }
+
+        BOOST_LOG_TRIVIAL(debug) << "Sent status message \"" << message.c_str() << "\" to controller.";
+
+    } catch (const boost::system::system_error &ex) {
+        BOOST_LOG_TRIVIAL(error) << "Could not send message to controller.";
+    }
 }
 
 void BluetoothController::sendLast() {
-    if(lastMessage.isSet) {
-        std::ostringstream oss;
-        oss << "{" << static_cast<int>(lastMessage.status) << ":" << lastMessage.value << "}";
-        std::string message = oss.str();
+    if (lastMessage.isSet) {
+        boost::system::error_code error;
 
-        boost::asio::write(serialPort, boost::asio::buffer(message));
+        try {
+            std::ostringstream oss;
+            oss << "{" << static_cast<int>(lastMessage.status) << ":" << lastMessage.value << "}";
+            std::string message = oss.str();
+
+            boost::asio::write(serialPort, boost::asio::buffer(message), error);
+
+            if (error) {
+                BOOST_LOG_TRIVIAL(error) << error.message().c_str();
+                return;
+            }
+        } catch (const boost::system::system_error &ex) {
+            BOOST_LOG_TRIVIAL(error) << "Could not send message to controller.";
+        }
     }
 }
 
@@ -63,7 +164,8 @@ std::tuple<std::string, std::string, std::string> BluetoothController::convertIn
         return std::make_tuple(type, key, value);
     }
 
-    BOOST_LOG_TRIVIAL(warning) << "Invalid message \"" << command.substr(begin_pos, end_pos + 1) << "\" received.";
+    BOOST_LOG_TRIVIAL(warning) << "Invalid message \"" << command.substr(begin_pos, end_pos + 1).c_str()
+                               << "\" received.";
 
     return std::make_tuple("-1", "-1", "-1");
 }
@@ -92,4 +194,6 @@ StatusMessage::StatusMessage() {
     status = Status::BT_CONNECTED;
     value = 0;
 }
+
+
 

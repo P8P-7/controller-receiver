@@ -23,7 +23,7 @@ namespace goliath::btc {
     enum class Status : std::uint8_t {
         BT_CONNECTED,
         BT_INVALID_INPUT,
-        BT_BATTERY,
+        BT_BATTERY
     };
 
     struct StatusMessage {
@@ -45,7 +45,11 @@ namespace goliath::btc {
         * @brief Constructor
         * @param dev Path to bluetooth serial device
         */
-        BluetoothController(const std::string &devicePath);
+        BluetoothController(const std::string &devicePath, std::string &newDeviceAddress);
+
+        bool connect();
+
+        void reconnect();
 
         /**
         * @brief Wait for input to be received
@@ -58,12 +62,16 @@ namespace goliath::btc {
 
         void clear();
 
-    private:
-        std::tuple<std::string, std::string, std::string> convertInput(char buffer[]);
+        bool connected();
 
+    private:
+        const char *devicePath;
+        const int BUFFER_SIZE = 1024;
+        std::string deviceAddress;
         boost::asio::io_service io;
         boost::asio::serial_port serialPort = boost::asio::serial_port(io);
-        const int BUFFER_SIZE = 1024;
         StatusMessage lastMessage = StatusMessage((Status)0,0);
+
+        std::tuple<std::string, std::string, std::string> convertInput(char buffer[]);
     };
 }

@@ -13,10 +13,14 @@
  * @brief enum for all input types
  */
 enum TYPE {
-    CONTROL_TYPE,
-    CONFIG_TYPE,
-    LASTSTATUS_TYPE
+    IGNORE_TYPE = -3,
+    CONNECTIONLOST_TYPE = -2,
+    CONTROL_TYPE = 0,
+    CONFIG_TYPE = 1,
+    LASTSTATUS_TYPE = 2
 };
+
+MessageCarrier ignoreInput(CONTROL control, int value);
 
 /**
  * @fn MessageCarrier dualJoystickToMove(CONTROL control, int value)

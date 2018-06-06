@@ -3,7 +3,7 @@
 #include <boost/asio/serial_port.hpp>
 #include <boost/log/trivial.hpp>
 #include <goliath/bluetooth_controller.h>
-#include <goliath/zmq_messaging.h>
+#include <goliath/zmq-messaging.h>
 #include <goliath/foundation.h>
 #include <MessageCarrier.pb.h>
 
@@ -27,7 +27,7 @@ using namespace goliath;
 void initControls() {
     if (!FUNCTION_MAP.empty()) {
         FUNCTION_MAP.clear();
-        BOOST_LOG_TRIVIAL(info) << "Changed to mode " << getConfig(MODE);
+        BOOST_LOG_TRIVIAL(debug) << "Changed to mode " << getConfig(MODE);
     }
     // Map function to controller input
     switch (getConfig(MODE)) {
@@ -43,9 +43,9 @@ void initControls() {
             FUNCTION_MAP.emplace(BTN4, buttonToFrontWing);
             break;
         case 1:
-            FUNCTION_MAP.emplace(JSLX, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSLX, ignoreInput);
             FUNCTION_MAP.emplace(JSLY, dualJoystickToMove);
-            FUNCTION_MAP.emplace(JSRX, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSRX, ignoreInput);
             FUNCTION_MAP.emplace(JSRY, dualJoystickToMove);
             FUNCTION_MAP.emplace(BTN1, buttonToBackWing);
             FUNCTION_MAP.emplace(BTN2, buttonToBackWing);
@@ -73,8 +73,9 @@ static void show_usage(std::string name) {
     std::cerr << "Usage: " << name << " <option(s)> ARGUMENT\n"
               << "Options:\n"
               << "\t-h,--help\t\tShow this help message\n"
-              << "\t-a,--address IP\t\tSpecify the broker ip-address\n"
-              << "\t-d,--device DEVICE\tSpecify the device path\n";
+              << "\t-b,--broker IP\t\tSpecify the broker ip-address\n"
+              << "\t-d,--device DEVICE\tSpecify the device path\n"
+              << "\t-a,-- ADDRESS\tSpecify the device hardware address\n";
 }
 
 /**
@@ -84,12 +85,11 @@ static void show_usage(std::string name) {
  * @param argv arguments
  */
 int main(int argc, char **argv) {
-    BOOST_LOG_TRIVIAL(info) << "Starting Controller Converter.";
-    goliath::util::Console console(&goliath::util::colorConsoleFormatter, argv[0], "converter-text.txt");
-
+    boost::log::trivial::severity_level logLevel = boost::log::trivial::info;
     const int BUFFER_SIZE = 128;
     const char *brokerAdress = "127.0.0.1";
-    const char *device = "/dev/rfcomm1";
+    const char *devicePath = "/dev/rfcomm0";
+    std::string devicAddress = "98:D3:31:FD:15:48";
     bool stop = false;
 
     // Command line options
@@ -99,33 +99,49 @@ int main(int argc, char **argv) {
             show_usage(argv[0]);
             return 0;
         }
-        if ((arg == "-a") || (arg == "--address")) {
+        if ((arg == "-b") || (arg == "--broker")) {
             if (i + 1 < argc) {
                 i++;
                 brokerAdress = argv[i];
             } else {
-                std::cerr << "--address option requires one argument." << std::endl;
+                std::cerr << "--broker option requires one argument." << std::endl;
                 return 1;
             }
         } else if ((arg == "-d") || (arg == "--device")) {
             if (i + 1 < argc) {
                 i++;
-                device = argv[i];
+                devicePath = argv[i];
             } else {
                 std::cerr << "--device option requires one argument." << std::endl;
                 return 1;
             }
+        } else if ((arg == "-a") || (arg == "--address")) {
+            if (i + 1 < argc) {
+                i++;
+                devicAddress = argv[i];
+            } else {
+                std::cerr << "--address option requires one argument." << std::endl;
+                return 1;
+            }
+        } else if (arg == "--debug") {
+            logLevel = boost::log::trivial::debug;
         }
     }
+
+    util::Console console(&util::colorConsoleFormatter,
+                          argv[0],
+                          "converter-text.txt",
+                          logLevel);
+
+    BOOST_LOG_TRIVIAL(info) << "Starting Controller Converter.";
 
     initConfig();
     initControls();
 
     // Setup bluetooth serial connection
-    btc::BluetoothController bt(device);
+    btc::BluetoothController bt(devicePath, devicAddress);
     bt.clear();
     bt.send(btc::Status::BT_CONNECTED, 0);
-    BOOST_LOG_TRIVIAL(info) << "Connected to controller.";
 
     // Setup ZMQ publisher and subscriber
     zmq::context_t context(2);
@@ -180,6 +196,15 @@ int main(int argc, char **argv) {
             case LASTSTATUS_TYPE: {
                 bt.sendLast();
                 BOOST_LOG_TRIVIAL(debug) << "Sent last status to controller";
+                break;
+            }
+            case CONNECTIONLOST_TYPE: {
+                BOOST_LOG_TRIVIAL(error) << "Connection to controller lost.";
+                bt.reconnect();
+                bt.clear();
+                break;
+            }
+            case IGNORE_TYPE: {
                 break;
             }
             default:
