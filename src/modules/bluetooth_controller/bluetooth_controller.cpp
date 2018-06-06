@@ -9,7 +9,7 @@ BluetoothController::BluetoothController(const std::string &newDevicePath, std::
     BOOST_LOG_TRIVIAL(info) << "Connecting to " << deviceAddress.c_str() << " on " << devicePath;
 
     while (!connect()) {
-        BOOST_LOG_TRIVIAL(error) << "Could not connect to controller, retying...";
+        BOOST_LOG_TRIVIAL(error) << "Could not connect to controller, retrying...";
     };
 
     BOOST_LOG_TRIVIAL(info) << "Connected to controller.";

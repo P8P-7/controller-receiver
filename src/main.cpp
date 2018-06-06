@@ -42,9 +42,9 @@ void initControls() {
             FUNCTION_MAP.emplace(BTN4, buttonToFrontWing);
             break;
         case 1:
-            FUNCTION_MAP.emplace(JSLX, ignoreInput);
+            FUNCTION_MAP.emplace(JSLX, dualJoystickToMove);
             FUNCTION_MAP.emplace(JSLY, dualJoystickToMove);
-            FUNCTION_MAP.emplace(JSRX, ignoreInput);
+            FUNCTION_MAP.emplace(JSRX, dualJoystickToMove);
             FUNCTION_MAP.emplace(JSRY, dualJoystickToMove);
             FUNCTION_MAP.emplace(BTN1, buttonToBackWing);
             FUNCTION_MAP.emplace(BTN2, buttonToBackWing);
