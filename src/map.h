@@ -36,7 +36,7 @@ void setConfig(CONFIG config, int value);
  * @var std::map<CONTROL, std::function<Message(CONTROL,int)>> FUNCTION_MAP
  * @brief function to input map
  */
-static std::map<CONTROL, std::function<MessageCarrier(CONTROL,int)>> FUNCTION_MAP;
+static std::map<CONTROL, std::function<goliath::proto::MessageCarrier(CONTROL,int)>> FUNCTION_MAP;
 
 /**
  * @var std::map<CONFIG, int> CONFIGURATION

@@ -1,41 +1,43 @@
 #include <deque>
 #include "convert.h"
 
+using namespace goliath::proto;
+
 MessageCarrier ignoreInput(CONTROL control, int value) {
     return MessageCarrier();
 }
 
 MessageCarrier dualJoystickToMove(CONTROL control, int value) {
     MessageCarrier message;
-    auto *commandMessage(new CommandMessage);
-    auto *moveCommand(new MoveCommand);
-    MotorCommand_Gear gear;
-    std::deque<MotorCommand_Motor> motors;
+    CommandMessage *commandMessage(new CommandMessage);
+    commands::MoveCommand *moveCommand(new commands::MoveCommand);
+    commands::MotorCommand_Gear gear;
+    std::deque<commands::MotorCommand_Motor> motors;
 
     // Apply sensitivity
     value = value * getConfig(SENSITIVITY) / 255 / 2;
 
     // Select gear
     if (value < 0) {
-        gear = MotorCommand_Gear_FORWARD;
+        gear = commands::MotorCommand_Gear_FORWARD;
     } else if (value > 0) {
-        gear = MotorCommand_Gear_BACKWARD;
+        gear = commands::MotorCommand_Gear_BACKWARD;
     } else {
-        gear = MotorCommand_Gear_LOCK;
+        gear = commands::MotorCommand_Gear_LOCK;
     }
 
     // Select motors
     if (control == JSLY) {
-        motors.emplace_back(MotorCommand_Motor_LEFT_FRONT);
-        motors.emplace_back(MotorCommand_Motor_LEFT_BACK);
+        motors.emplace_back(commands::MotorCommand_Motor_LEFT_FRONT);
+        motors.emplace_back(commands::MotorCommand_Motor_LEFT_BACK);
     } else if (control == JSRY){
-        motors.emplace_back(MotorCommand_Motor_RIGHT_FRONT);
-        motors.emplace_back(MotorCommand_Motor_RIGHT_BACK);
+        motors.emplace_back(commands::MotorCommand_Motor_RIGHT_FRONT);
+        motors.emplace_back(commands::MotorCommand_Motor_RIGHT_BACK);
     }
 
     // Add motor commands to single move command
-    for (MotorCommand_Motor motor : motors) {
-        MotorCommand *motorCommand = moveCommand->add_commands();
+    for (commands::MotorCommand_Motor motor : motors) {
+        commands::MotorCommand *motorCommand = moveCommand->add_commands();
         motorCommand->set_motor(motor);
         motorCommand->set_gear(gear);
         motorCommand->set_speed(abs(value));
@@ -51,8 +53,8 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
 }
 
 MessageCarrier buttonToFrontWing(CONTROL control, int value) {
-    ServoCommand_Motor wing;
-    ServoCommand_Direction direction;
+    commands::ServoCommand_Motor wing;
+    commands::ServoCommand_Direction direction;
     int speed = 0;
     if(value == 1){
         speed = 512;
@@ -66,13 +68,13 @@ MessageCarrier buttonToFrontWing(CONTROL control, int value) {
 
     switch (control) {
         case BTN1:
-            return toMoveWingMessage(ServoCommand_Motor_LEFT_FRONT, ServoCommand_Direction_UP, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_UP, speed);
         case BTN2:
-            return toMoveWingMessage(ServoCommand_Motor_LEFT_FRONT, ServoCommand_Direction_DOWN, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_DOWN, speed);
         case BTN3:
-            return toMoveWingMessage(ServoCommand_Motor_RIGHT_FRONT, ServoCommand_Direction_UP, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_FRONT, commands::ServoCommand_Direction_UP, speed);
         case BTN4:
-            return toMoveWingMessage(ServoCommand_Motor_RIGHT_FRONT, ServoCommand_Direction_DOWN, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_FRONT, commands::ServoCommand_Direction_DOWN, speed);
         default:
             break;
     }
@@ -82,8 +84,8 @@ MessageCarrier buttonToFrontWing(CONTROL control, int value) {
 
 MessageCarrier buttonToBackWing(CONTROL control, int value) {
 
-    ServoCommand_Motor wing;
-    ServoCommand_Direction direction;
+    commands::ServoCommand_Motor wing;
+    commands::ServoCommand_Direction direction;
     int speed = 0;
     if(value == 1){
         speed = 512;
@@ -97,13 +99,13 @@ MessageCarrier buttonToBackWing(CONTROL control, int value) {
 
     switch (control) {
         case BTN1:
-            return toMoveWingMessage(ServoCommand_Motor_LEFT_BACK, ServoCommand_Direction_UP, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_BACK, commands::ServoCommand_Direction_UP, speed);
         case BTN2:
-            return toMoveWingMessage(ServoCommand_Motor_LEFT_BACK, ServoCommand_Direction_DOWN, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_BACK, commands::ServoCommand_Direction_DOWN, speed);
         case BTN3:
-            return toMoveWingMessage(ServoCommand_Motor_RIGHT_BACK, ServoCommand_Direction_UP, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_UP, speed);
         case BTN4:
-            return toMoveWingMessage(ServoCommand_Motor_RIGHT_BACK, ServoCommand_Direction_DOWN, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_DOWN, speed);
         default:
             break;
     }
@@ -118,12 +120,12 @@ MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std:
     return MessageCarrier();
 }
 
-MessageCarrier toMoveWingMessage(ServoCommand_Motor wing, ServoCommand_Direction direction, int speed){
+MessageCarrier toMoveWingMessage(commands::ServoCommand_Motor wing, commands::ServoCommand_Direction direction, int speed){
     MessageCarrier message;
     auto *commandMessage(new CommandMessage);
-    auto *moveCommand(new MoveWingCommand);
+    auto *moveCommand(new commands::MoveWingCommand);
 
-    ServoCommand *wingCommand = moveCommand->add_commands();
+    commands::ServoCommand *wingCommand = moveCommand->add_commands();
     wingCommand->set_motor(wing);
     wingCommand->set_speed(speed);
     wingCommand->set_direction(direction);

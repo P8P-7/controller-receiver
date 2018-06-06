@@ -17,7 +17,6 @@
  * @file main.cpp
  * @author Group 7 - Informatica
  */
-
 using namespace goliath;
 
 /**
@@ -59,7 +58,7 @@ void initControls() {
  * @fn void sendToController()
  * @brief Sends incoming messages to controller.
  */
-void sendToController(MessageCarrier messageCarrier) {
+void sendToController(proto::MessageCarrier messageCarrier) {
     //TODO convert repo message into data for controller
     BOOST_LOG_TRIVIAL(debug) << "Sent message to conrtoller.";
 }
@@ -148,7 +147,7 @@ int main(int argc, char **argv) {
     goliath::messaging::ZmqPublisher pub(context, brokerAdress, 5556);
     goliath::messaging::ZmqSubscriber sub(context, brokerAdress, 5556);
 
-    sub.bind(MessageCarrier::kSynchronizeMessage, sendToController);
+    sub.bind(proto::MessageCarrier::kSynchronizeMessage, sendToController);
 
 
     while (!stop) {
@@ -163,7 +162,7 @@ int main(int argc, char **argv) {
                 // Convert to protobuf Message
                 CONTROL control = stringToControl(std::get<1>(input));
                 int value = stringToValue(std::get<2>(input));
-                MessageCarrier message;
+                proto::MessageCarrier message;
                 if (control < CONTROL_NR_ITEMS) {
                     message = convertControl(control, value, FUNCTION_MAP);
                 } else {
