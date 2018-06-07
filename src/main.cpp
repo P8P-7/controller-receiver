@@ -56,10 +56,20 @@ void initControls() {
             FUNCTION_MAP.emplace(JSLY, dualJoystickToMove);
             FUNCTION_MAP.emplace(JSRX, dualJoystickToMove);
             FUNCTION_MAP.emplace(JSRY, dualJoystickToMove);
-            FUNCTION_MAP.emplace(BTN1, buttonToBackWing);
-            FUNCTION_MAP.emplace(BTN2, buttonToBackWing);
-            FUNCTION_MAP.emplace(BTN3, buttonToBackWing);
-            FUNCTION_MAP.emplace(BTN4, buttonToBackWing);
+            FUNCTION_MAP.emplace(BTN1, buttonToAllWing);
+            FUNCTION_MAP.emplace(BTN2, buttonToAllWing);
+            FUNCTION_MAP.emplace(BTN3, buttonToAllWing);
+            FUNCTION_MAP.emplace(BTN4, buttonToAllWing);
+            break;
+        case 3:
+            FUNCTION_MAP.emplace(JSLX, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSLY, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSRX, dualJoystickToMove);
+            FUNCTION_MAP.emplace(JSRY, dualJoystickToMove);
+            FUNCTION_MAP.emplace(BTN1, buttonToAllWing);
+            FUNCTION_MAP.emplace(BTN2, buttonToAllWing);
+            FUNCTION_MAP.emplace(BTN3, buttonToAllWing);
+            FUNCTION_MAP.emplace(BTN4, buttonToAllWing);
             break;
     }
 }

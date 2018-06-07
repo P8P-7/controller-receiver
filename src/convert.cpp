@@ -1,7 +1,9 @@
-#include <deque>
 #include "convert.h"
 
-using namespace goliath::proto;
+
+std::deque<commands::ServoCommand_Motor> front = {commands::ServoCommand_Motor_LEFT_FRONT,commands::ServoCommand_Motor_RIGHT_FRONT};
+
+std::deque<commands::ServoCommand_Motor> back = {commands::ServoCommand_Motor_LEFT_BACK,commands::ServoCommand_Motor_RIGHT_BACK};
 
 MessageCarrier ignoreInput(CONTROL control, int value) {
     return MessageCarrier();
@@ -108,6 +110,34 @@ MessageCarrier buttonToBackWing(CONTROL control, int value) {
     return MessageCarrier();
 }
 
+MessageCarrier buttonToAllWing(CONTROL control, int value) {
+    int speed = 0;
+    if(value == 1){
+        speed = getConfig(SENSITIVITY) * 4;
+    }
+
+    if(value == 0){
+        BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" released.";
+    } else{
+        BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" pressed.";
+    }
+
+    switch (control) {
+        case BTN1:
+            return toMoveWingMessage(front, commands::ServoCommand_Direction_UP, speed);
+        case BTN2:
+            return toMoveWingMessage(front, commands::ServoCommand_Direction_DOWN, speed);
+        case BTN3:
+            return toMoveWingMessage(back, commands::ServoCommand_Direction_DOWN, speed);
+        case BTN4:
+            return toMoveWingMessage(back, commands::ServoCommand_Direction_UP, speed);
+        default:
+            break;
+    }
+
+    return MessageCarrier();
+}
+
 MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std::function<MessageCarrier(CONTROL,int)>> functionMap) {
     if(functionMap[control] != NULL) {
         return functionMap[control](control, value);
@@ -124,6 +154,34 @@ MessageCarrier toMoveWingMessage(commands::ServoCommand_Motor wing, commands::Se
     wingCommand->set_motor(wing);
     wingCommand->set_speed(speed);
     wingCommand->set_direction(direction);
+
+    commandMessage->set_allocated_movewingcommand(moveCommand);
+    message.set_allocated_commandmessage(commandMessage);
+
+    return message;
+}
+
+MessageCarrier toMoveWingMessage(std::deque<commands::ServoCommand_Motor> wings, commands::ServoCommand_Direction direction, int speed){
+    MessageCarrier message;
+    auto *commandMessage(new CommandMessage);
+    auto *moveCommand(new commands::MoveWingCommand);
+
+    for(commands::ServoCommand_Motor wing : wings) {
+        commands::ServoCommand *wingCommand = moveCommand->add_commands();
+        wingCommand->set_motor(wing);
+        wingCommand->set_speed(speed);
+        if(wing == commands::ServoCommand_Motor_LEFT_FRONT || wing == commands::ServoCommand_Motor_RIGHT_BACK){
+            if(direction == commands::ServoCommand_Direction_UP){
+                wingCommand->set_direction(commands::ServoCommand_Direction_DOWN);
+            }
+            else{
+                wingCommand->set_direction(commands::ServoCommand_Direction_UP);
+            }
+        }
+        else{
+            wingCommand->set_direction(direction);
+        }
+    }
 
     commandMessage->set_allocated_movewingcommand(moveCommand);
     message.set_allocated_commandmessage(commandMessage);

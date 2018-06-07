@@ -3,10 +3,13 @@
 #include <iostream>
 #include <MessageCarrier.pb.h>
 #include <boost/log/trivial.hpp>
+#include <deque>
 
 #include "config.h"
 #include "control.h"
 #include "map.h"
+
+using namespace goliath::proto;
 
 /**
  * @var enum TYPE
@@ -47,6 +50,14 @@ goliath::proto::MessageCarrier buttonToFrontWing(CONTROL control, int value);
 goliath::proto::MessageCarrier buttonToBackWing(CONTROL control, int value);
 
 /**
+ * @fn goliath::proto::MessageCarrier buttonToAllWing(CONTROL control, int value)
+ * @brief Converts button presses to message with MoveWingCommand for front/back wings
+ * @param control Button or axis
+ * @param value Value of button or axis
+ */
+goliath::proto::MessageCarrier buttonToAllWing(CONTROL control, int value);
+
+/**
  * @fn goliath::proto::MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std::function<goliath::proto::MessageCarrier(CONTROL,int)>> function)
  * @brief Calls function mapped to the input
  * @param control Button or axis
@@ -62,6 +73,15 @@ goliath::proto::MessageCarrier convertControl(CONTROL control, int value, std::m
  * @param speed Speed to move the wing
  */
 goliath::proto::MessageCarrier toMoveWingMessage(goliath::proto::commands::ServoCommand_Motor wing, goliath::proto::commands::ServoCommand_Direction direction, int speed);
+
+/**
+ * @fn goliath::proto::MessageCarrier toMoveWingMessage(std::deque<commands::ServoCommand_Motor> wings, commands::ServoCommand_Direction direction, int speed)
+ * @brief Converts input to Message with MoveWingCommand.
+ * @param wings Deque of wings
+ * @param direction Direction to move the wing in
+ * @param speed Speed to move the wing
+ */
+goliath::proto::MessageCarrier toMoveWingMessage(std::deque<commands::ServoCommand_Motor> wings, commands::ServoCommand_Direction direction, int speed);
 
 /**
  * @fn TYPE stringToType (std::string string)

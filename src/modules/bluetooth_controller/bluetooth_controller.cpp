@@ -14,7 +14,7 @@ BluetoothController::BluetoothController(const std::string &newDevicePath, std::
 
     BOOST_LOG_TRIVIAL(info) << "Connected to controller.";
 
-    serialPort.set_option(boost::asio::serial_port_base::baud_rate(9600)); // Default for bluetooth
+    serialPort.set_option(boost::asio::serial_port_base::baud_rate(38400)); // Default for bluetooth
     serialPort.set_option(boost::asio::serial_port_base::character_size(8));
 }
 
@@ -66,7 +66,7 @@ bool BluetoothController::connected() {
 
     if (!serialPort.is_open()) {
         serialPort.open(devicePath);
-        serialPort.set_option(boost::asio::serial_port_base::baud_rate(9600)); // Default for bluetooth
+        serialPort.set_option(boost::asio::serial_port_base::baud_rate(38400)); // Default for bluetooth
         serialPort.set_option(boost::asio::serial_port_base::character_size(8));
     }
 
