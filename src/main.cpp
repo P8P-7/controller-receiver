@@ -26,7 +26,7 @@ using namespace goliath;
 void initControls() {
     if (!FUNCTION_MAP.empty()) {
         FUNCTION_MAP.clear();
-        BOOST_LOG_TRIVIAL(debug) << "Changed to mode " << getConfig(MODE);
+        BOOST_LOG_TRIVIAL(info) << "Changed to mode " << getConfig(MODE);
     }
     // Map function to controller input
     switch (getConfig(MODE)) {
@@ -80,7 +80,13 @@ void initControls() {
  */
 void sendToController(proto::MessageCarrier messageCarrier) {
     //TODO convert repo message into data for controller
+
+//    if(messageCarrier.has_synchronizemessage()){
+//
+//    }
+
     BOOST_LOG_TRIVIAL(debug) << "Sent message to conrtoller.";
+    return;
 }
 
 /**
@@ -152,6 +158,12 @@ int main(int argc, char **argv) {
                           "converter-text.txt",
                           logLevel);
 
+    if(geteuid() != 0)
+    {
+        BOOST_LOG_TRIVIAL(error) <<  "Root privleges needed.";
+        return 1;
+    }
+
     BOOST_LOG_TRIVIAL(info) << "Starting Controller Converter.";
 
     initConfig();
@@ -165,7 +177,7 @@ int main(int argc, char **argv) {
     // Setup ZMQ publisher and subscriber
     zmq::context_t context(2);
     goliath::messaging::ZmqPublisher pub(context, brokerAdress, 5556);
-    goliath::messaging::ZmqSubscriber sub(context, brokerAdress, 5556);
+    goliath::messaging::ZmqSubscriber sub(context, brokerAdress, 5555);
 
     sub.bind(proto::MessageCarrier::kSynchronizeMessage, sendToController);
 
@@ -232,4 +244,5 @@ int main(int argc, char **argv) {
                 break;
         }
     }
+    return 0;
 }

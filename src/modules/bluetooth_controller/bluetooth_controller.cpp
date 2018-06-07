@@ -4,7 +4,7 @@ using namespace goliath::btc;
 
 BluetoothController::BluetoothController(const std::string &newDevicePath, std::string &newDeviceAddress) {
     devicePath = newDevicePath.c_str();
-    deviceAddress = newDeviceAddress.c_str();
+    deviceAddress = newDeviceAddress;
 
     BOOST_LOG_TRIVIAL(info) << "Connecting to " << deviceAddress.c_str() << " on " << devicePath;
 
@@ -14,7 +14,7 @@ BluetoothController::BluetoothController(const std::string &newDevicePath, std::
 
     BOOST_LOG_TRIVIAL(info) << "Connected to controller.";
 
-    serialPort.set_option(boost::asio::serial_port_base::baud_rate(38400)); // Default for bluetooth
+    serialPort.set_option(boost::asio::serial_port_base::baud_rate(38400));
     serialPort.set_option(boost::asio::serial_port_base::character_size(8));
 }
 
@@ -32,7 +32,7 @@ bool BluetoothController::connect() {
 
     for (int i = 0; i < nTries; i++) {
         if (connected()) {
-            if(!serialPort.is_open()) {
+            if (!serialPort.is_open()) {
                 serialPort.open(devicePath);
             }
             return true;
@@ -44,7 +44,7 @@ bool BluetoothController::connect() {
 }
 
 void BluetoothController::reconnect() {
-    if(serialPort.is_open()){
+    if (serialPort.is_open()) {
         serialPort.close();
     }
 
@@ -149,24 +149,35 @@ void BluetoothController::sendLast() {
 }
 
 std::tuple<std::string, std::string, std::string> BluetoothController::convertInput(char *buffer) {
-    std::string command(buffer);
-    std::size_t begin_pos = command.find('{');
-    std::size_t type_separator_pos = command.find(';');
-    std::size_t separator_pos = command.find(':');
-    std::size_t end_pos = command.find('}');
+    BOOST_LOG_TRIVIAL(debug) << "buffer: " << buffer;
+    if (buffer != 0) {
+        std::string command(buffer);
+        std::size_t begin_pos = command.find('{');
+        std::size_t type_separator_pos = command.find(';');
+        std::size_t separator_pos = command.find(':');
+        std::size_t end_pos = command.find('}');
 
-    if (type_separator_pos - begin_pos > 1 && separator_pos - type_separator_pos > 1 && end_pos - separator_pos > 1 &&
-        begin_pos != std::string::npos && type_separator_pos != std::string::npos &&
-        separator_pos != std::string::npos && end_pos != std::string::npos && end_pos - begin_pos > 5)
-    {
-        std::string type = command.substr(begin_pos + 1, type_separator_pos - begin_pos - 1);
-        std::string key = command.substr(type_separator_pos + 1, separator_pos - type_separator_pos - 1);
-        std::string value = command.substr(separator_pos + 1, end_pos);
-        return std::make_tuple(type, key, value);
+        if (begin_pos < command.size() &&
+            type_separator_pos - begin_pos > 1 &&
+            separator_pos - type_separator_pos > 1 &&
+            end_pos - separator_pos > 1 &&
+            begin_pos != std::string::npos &&
+            type_separator_pos != std::string::npos &&
+            separator_pos != std::string::npos &&
+            end_pos != std::string::npos &&
+            end_pos - begin_pos > 5)
+        {
+            std::string type = command.substr(begin_pos + 1, type_separator_pos - begin_pos - 1);
+            std::string key = command.substr(type_separator_pos + 1, separator_pos - type_separator_pos - 1);
+            std::string value = command.substr(separator_pos + 1, end_pos);
+            return std::make_tuple(type, key, value);
+        }
+        BOOST_LOG_TRIVIAL(warning) << "Invalid message \"" << command.substr(begin_pos, end_pos + 1).c_str()
+                                   << "\" received.";
+    } else {
+        BOOST_LOG_TRIVIAL(warning) << "Empty message received.";
     }
 
-    BOOST_LOG_TRIVIAL(warning) << "Invalid message \"" << command.substr(begin_pos, end_pos + 1).c_str()
-                               << "\" received.";
 
     return std::make_tuple("-1", "-1", "-1");
 }
