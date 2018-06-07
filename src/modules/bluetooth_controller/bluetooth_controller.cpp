@@ -76,10 +76,7 @@ bool BluetoothController::connected() {
 
     serialPort.close();
 
-    if (ec) {
-        return false;
-    }
-    return true;
+    return ec == nullptr;
 }
 
 std::tuple<std::string, std::string, std::string> BluetoothController::receive() {
@@ -103,7 +100,7 @@ std::tuple<std::string, std::string, std::string> BluetoothController::receive()
     return convertInput(buffer);
 }
 
-void BluetoothController::send(Status status, short value) {
+void BluetoothController::send(Status status, int value) {
     boost::system::error_code error;
 
     try {
@@ -115,7 +112,7 @@ void BluetoothController::send(Status status, short value) {
 
         boost::asio::write(serialPort, boost::asio::buffer(message), error);
 
-        if (error) {
+        if (error != nullptr) {
             BOOST_LOG_TRIVIAL(error) << error.message().c_str();
             return;
         }
@@ -138,7 +135,7 @@ void BluetoothController::sendLast() {
 
             boost::asio::write(serialPort, boost::asio::buffer(message), error);
 
-            if (error) {
+            if (error != nullptr) {
                 BOOST_LOG_TRIVIAL(error) << error.message().c_str();
                 return;
             }
@@ -152,32 +149,23 @@ std::tuple<std::string, std::string, std::string> BluetoothController::convertIn
     BOOST_LOG_TRIVIAL(debug) << "buffer: " << buffer;
     if (buffer != 0) {
         std::string command(buffer);
-        std::size_t begin_pos = command.find('{');
-        std::size_t type_separator_pos = command.find(';');
-        std::size_t separator_pos = command.find(':');
-        std::size_t end_pos = command.find('}');
+        std::vector<std::size_t> pos;
+        pos.emplace_back(command.find('{'));
+        pos.emplace_back(command.find(';'));
+        pos.emplace_back(command.find(':'));
+        pos.emplace_back(command.find('}'));
 
-        if (begin_pos < command.size() &&
-            type_separator_pos - begin_pos > 1 &&
-            separator_pos - type_separator_pos > 1 &&
-            end_pos - separator_pos > 1 &&
-            begin_pos != std::string::npos &&
-            type_separator_pos != std::string::npos &&
-            separator_pos != std::string::npos &&
-            end_pos != std::string::npos &&
-            end_pos - begin_pos > 5)
-        {
-            std::string type = command.substr(begin_pos + 1, type_separator_pos - begin_pos - 1);
-            std::string key = command.substr(type_separator_pos + 1, separator_pos - type_separator_pos - 1);
-            std::string value = command.substr(separator_pos + 1, end_pos);
+        if (pos[0] != std::string::npos && pos[1] != std::string::npos && pos[2] != std::string::npos &&
+            pos[3] != std::string::npos && std::is_sorted(begin(pos), end(pos))) {
+            std::string type = command.substr(pos[0] + 1, pos[1] - pos[0] - 1);
+            std::string key = command.substr(pos[1] + 1, pos[2] - pos[1] - 1);
+            std::string value = command.substr(pos[2] + 1, pos[3]);
             return std::make_tuple(type, key, value);
         }
-        BOOST_LOG_TRIVIAL(warning) << "Invalid message \"" << command.substr(begin_pos, end_pos + 1).c_str()
-                                   << "\" received.";
+        BOOST_LOG_TRIVIAL(warning) << "Invalid message \"" << command.c_str() << "\" received.";
     } else {
         BOOST_LOG_TRIVIAL(warning) << "Empty message received.";
     }
-
 
     return std::make_tuple("-1", "-1", "-1");
 }

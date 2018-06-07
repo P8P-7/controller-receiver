@@ -72,7 +72,7 @@ namespace goliath::btc {
         * @brief Reconnect to controller if connection was lost
          * @param status
         */
-        void send(Status status, short value);
+        void send(Status status, int value);
 
         void sendLast();
 
