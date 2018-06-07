@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['initconfig',['initConfig',['../map_8h.html#a5af1011f0f921aef06ecdfc27d7bf791',1,'map.cpp']]],
-  ['initcontrols',['initControls',['../main_8cpp.html#ade2ac8db32081bbf24ad4ec0b505910e',1,'main.cpp']]]
+  ['btc',['btc',['../namespacegoliath_1_1btc.html',1,'goliath']]],
+  ['getconfig',['getConfig',['../map_8h.html#a9900849ee08740bea4b6e81655103e0b',1,'map.cpp']]]
 ];
