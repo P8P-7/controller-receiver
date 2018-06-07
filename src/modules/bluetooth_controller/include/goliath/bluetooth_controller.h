@@ -17,9 +17,9 @@
 
 namespace goliath::btc {
 
-   /**
-   * @brief enum for all status updates to controller
-   */
+    /**
+    * @brief enum for all status updates to controller
+    */
     enum class Status : std::uint8_t {
         BT_CONNECTED,
         BT_INVALID_INPUT,
@@ -28,7 +28,9 @@ namespace goliath::btc {
 
     struct StatusMessage {
         StatusMessage();
+
         StatusMessage(Status status, short value);
+
         void set(Status status, short value);
 
         Status status;
@@ -47,15 +49,29 @@ namespace goliath::btc {
         */
         BluetoothController(const std::string &devicePath, std::string &newDeviceAddress);
 
+        /**
+        * @fn bool connect()
+        * @brief Connect to controller
+        */
         bool connect();
 
+        /**
+        * @fn void reconnect()
+        * @brief Reconnect to controller if connection was lost
+        */
         void reconnect();
 
         /**
+        * @fn std::tuple<std::string, std::string, std::string> receive()
         * @brief Wait for input to be received
         */
         std::tuple<std::string, std::string, std::string> receive();
 
+        /**
+        * @fn void send(Status status, short value)
+        * @brief Reconnect to controller if connection was lost
+         * @param status
+        */
         void send(Status status, short value);
 
         void sendLast();
@@ -70,7 +86,7 @@ namespace goliath::btc {
         std::string deviceAddress;
         boost::asio::io_service io;
         boost::asio::serial_port serialPort = boost::asio::serial_port(io);
-        StatusMessage lastMessage = StatusMessage((Status)0,0);
+        StatusMessage lastMessage = StatusMessage((Status) 0, 0);
 
         std::tuple<std::string, std::string, std::string> convertInput(char buffer[]);
     };

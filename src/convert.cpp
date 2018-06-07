@@ -53,11 +53,9 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
 }
 
 MessageCarrier buttonToFrontWing(CONTROL control, int value) {
-    commands::ServoCommand_Motor wing;
-    commands::ServoCommand_Direction direction;
     int speed = 0;
     if(value == 1){
-        speed = 512;
+        speed = getConfig(SENSITIVITY) * 4;
     }
 
     if(value == 0){
@@ -68,9 +66,9 @@ MessageCarrier buttonToFrontWing(CONTROL control, int value) {
 
     switch (control) {
         case BTN1:
-            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_UP, speed);
-        case BTN2:
             return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_DOWN, speed);
+        case BTN2:
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_UP, speed);
         case BTN3:
             return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_FRONT, commands::ServoCommand_Direction_UP, speed);
         case BTN4:
@@ -83,9 +81,6 @@ MessageCarrier buttonToFrontWing(CONTROL control, int value) {
 }
 
 MessageCarrier buttonToBackWing(CONTROL control, int value) {
-
-    commands::ServoCommand_Motor wing;
-    commands::ServoCommand_Direction direction;
     int speed = 0;
     if(value == 1){
         speed = 512;
@@ -103,9 +98,9 @@ MessageCarrier buttonToBackWing(CONTROL control, int value) {
         case BTN2:
             return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_BACK, commands::ServoCommand_Direction_DOWN, speed);
         case BTN3:
-            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_UP, speed);
-        case BTN4:
             return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_DOWN, speed);
+        case BTN4:
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_UP, speed);
         default:
             break;
     }

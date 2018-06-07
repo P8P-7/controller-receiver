@@ -157,7 +157,8 @@ std::tuple<std::string, std::string, std::string> BluetoothController::convertIn
 
     if (type_separator_pos - begin_pos > 1 && separator_pos - type_separator_pos > 1 && end_pos - separator_pos > 1 &&
         begin_pos != std::string::npos && type_separator_pos != std::string::npos &&
-        separator_pos != std::string::npos && end_pos != std::string::npos && end_pos - begin_pos > 5) {
+        separator_pos != std::string::npos && end_pos != std::string::npos && end_pos - begin_pos > 5)
+    {
         std::string type = command.substr(begin_pos + 1, type_separator_pos - begin_pos - 1);
         std::string key = command.substr(type_separator_pos + 1, separator_pos - type_separator_pos - 1);
         std::string value = command.substr(separator_pos + 1, end_pos);
