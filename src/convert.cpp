@@ -83,7 +83,7 @@ MessageCarrier buttonToFrontWing(CONTROL control, int value) {
 MessageCarrier buttonToBackWing(CONTROL control, int value) {
     int speed = 0;
     if(value == 1){
-        speed = 512;
+        speed = getConfig(SENSITIVITY) * 4;
     }
 
     if(value == 0){
