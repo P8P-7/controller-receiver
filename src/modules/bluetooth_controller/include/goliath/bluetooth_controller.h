@@ -26,6 +26,32 @@ namespace goliath::btc {
         BT_BATTERY
     };
 
+    /**
+    * @brief enum for input errors
+    */
+    enum class InputError : std::uint8_t {
+        IE_SUCCES,
+        IE_EMPTY,
+        IE_WRONG_FORMAT,
+        IE_WRONG_VALUE,
+        IE_READ_ERROR,
+        IE_CONNECTION_LOST
+    };
+
+    struct Input {
+    public:
+        Input();
+
+        Input(std::string type, std::string control, std::string value);
+
+        Input(InputError error);
+
+        std::string type;
+        std::string control;
+        std::string value;
+        InputError error;
+    };
+
     struct StatusMessage {
         StatusMessage();
 
@@ -65,7 +91,7 @@ namespace goliath::btc {
         * @fn std::tuple<std::string, std::string, std::string> receive()
         * @brief Wait for input to be received
         */
-        std::tuple<std::string, std::string, std::string> receive();
+        Input receive();
 
         /**
         * @fn void send(Status status, short value)
@@ -88,6 +114,6 @@ namespace goliath::btc {
         boost::asio::serial_port serialPort = boost::asio::serial_port(io);
         StatusMessage lastMessage = StatusMessage((Status) 0, 0);
 
-        std::tuple<std::string, std::string, std::string> convertInput(char buffer[]);
+        Input convertInput(char buffer[]);
     };
 }

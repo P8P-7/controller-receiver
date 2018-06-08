@@ -76,10 +76,13 @@ bool BluetoothController::connected() {
 
     serialPort.close();
 
-    return ec == nullptr;
+    if(ec){
+        return false;
+    }
+    return true;
 }
 
-std::tuple<std::string, std::string, std::string> BluetoothController::receive() {
+Input BluetoothController::receive() {
     char c;
     auto *buffer = new char[BUFFER_SIZE];
     int i = 0;
@@ -94,7 +97,8 @@ std::tuple<std::string, std::string, std::string> BluetoothController::receive()
             }
         }
     } catch (const boost::system::system_error &ex) {
-        return std::make_tuple("-2", "-2", "-2");
+        BOOST_LOG_TRIVIAL(error) << "Boost error: " << ex.code() << ", " << ex.what();
+        return Input(InputError::IE_CONNECTION_LOST);
     }
 
     return convertInput(buffer);
@@ -112,7 +116,7 @@ void BluetoothController::send(Status status, int value) {
 
         boost::asio::write(serialPort, boost::asio::buffer(message), error);
 
-        if (error != nullptr) {
+        if (error) {
             BOOST_LOG_TRIVIAL(error) << error.message().c_str();
             return;
         }
@@ -135,7 +139,7 @@ void BluetoothController::sendLast() {
 
             boost::asio::write(serialPort, boost::asio::buffer(message), error);
 
-            if (error != nullptr) {
+            if (error) {
                 BOOST_LOG_TRIVIAL(error) << error.message().c_str();
                 return;
             }
@@ -145,8 +149,7 @@ void BluetoothController::sendLast() {
     }
 }
 
-std::tuple<std::string, std::string, std::string> BluetoothController::convertInput(char *buffer) {
-    BOOST_LOG_TRIVIAL(debug) << "buffer: " << buffer;
+Input BluetoothController::convertInput(char *buffer) {
     if (buffer != 0) {
         std::string command(buffer);
         std::vector<std::size_t> pos;
@@ -160,14 +163,14 @@ std::tuple<std::string, std::string, std::string> BluetoothController::convertIn
             std::string type = command.substr(pos[0] + 1, pos[1] - pos[0] - 1);
             std::string key = command.substr(pos[1] + 1, pos[2] - pos[1] - 1);
             std::string value = command.substr(pos[2] + 1, pos[3]);
-            return std::make_tuple(type, key, value);
+            return Input(type, key, value);
         }
         BOOST_LOG_TRIVIAL(warning) << "Invalid message \"" << command.c_str() << "\" received.";
-    } else {
-        BOOST_LOG_TRIVIAL(warning) << "Empty message received.";
+        return Input(InputError::IE_WRONG_FORMAT);
     }
 
-    return std::make_tuple("-1", "-1", "-1");
+    BOOST_LOG_TRIVIAL(warning) << "Empty message received.";
+    return Input(InputError::IE_EMPTY);
 }
 
 void BluetoothController::clear() {
@@ -196,4 +199,8 @@ StatusMessage::StatusMessage() {
 }
 
 
+Input::Input(std::string type, std::string control, std::string value) : type(type), control(control), value(value) {
+    error = InputError ::IE_SUCCES;
+}
 
+Input::Input(InputError error) : error(error) {}

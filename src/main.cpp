@@ -184,64 +184,63 @@ int main(int argc, char **argv) {
 
     while (!stop) {
         // Wait for input data from controller
-        std::tuple<std::string, std::string, std::string> input = bt.receive();
+        btc::Input input = bt.receive();
 
-        // Get input type
-        TYPE type = stringToType(std::get<0>(input));
+        if (input.error == btc::InputError::IE_SUCCES) {
+            // Get input type
+            TYPE type = stringToType(input.type);
 
-        switch (type) {
-            case CONTROL_TYPE: {
-                // Convert to protobuf Message
-                CONTROL control = stringToControl(std::get<1>(input));
-                int value = stringToValue(std::get<2>(input));
-                proto::MessageCarrier message;
-                if (control < CONTROL_NR_ITEMS) {
-                    message = convertControl(control, value, FUNCTION_MAP);
-                } else {
-                    bt.send(btc::Status::BT_INVALID_INPUT, 0);
+            switch (type) {
+                case CONTROL_TYPE: {
+                    // Convert to protobuf Message
+                    CONTROL control = stringToControl(input.control);
+                    int value = stringToValue(input.value);
+                    proto::MessageCarrier message;
+                    if (control < CONTROL_NR_ITEMS) {
+                        message = convertControl(control, value, FUNCTION_MAP);
+                    } else {
+                        bt.send(btc::Status::BT_INVALID_INPUT, 0);
+                    }
+                    // Send topic to broker
+                    if (message.ByteSize() > 0) {
+                        pub.publish(message);
+                    } else {
+                        BOOST_LOG_TRIVIAL(warning) << "Received invalid controller input.";
+                    }
+                    break;
                 }
-                // Send topic to broker
-                if (message.ByteSize() > 0) {
-                    pub.publish(message);
-                } else {
-                    BOOST_LOG_TRIVIAL(warning) << "Received invalid controller input.";
-                }
-                break;
-            }
-            case CONFIG_TYPE: {
-                // Convert string to CONFIG
-                CONFIG config = stringToConfig(std::get<1>(input));
-                int value = stringToValue(std::get<2>(input));
+                case CONFIG_TYPE: {
+                    // Convert string to CONFIG
+                    CONFIG config = stringToConfig(input.control);
+                    int value = stringToValue(input.value);
 
-                // Set config
-                setConfig(config, value);
+                    // Set config
+                    setConfig(config, value);
 
-                // Reset controls when mode changes
-                if (config == MODE) {
-                    initControls();
+                    // Reset controls when mode changes
+                    if (config == MODE) {
+                        initControls();
+                    }
+                    BOOST_LOG_TRIVIAL(debug) << "Received config \"" << config << "\" with value \"" << value
+                                             << "\" from controller.";
+                    break;
                 }
-                BOOST_LOG_TRIVIAL(debug) << "Received config \"" << config << "\" with value \"" << value
-                                         << "\" from controller.";
-                break;
+                case LASTSTATUS_TYPE: {
+                    bt.sendLast();
+                    BOOST_LOG_TRIVIAL(debug) << "Sent last status to controller";
+                    break;
+                }
+                default:
+                    break;
             }
-            case LASTSTATUS_TYPE: {
-                bt.sendLast();
-                BOOST_LOG_TRIVIAL(debug) << "Sent last status to controller";
-                break;
-            }
-            case CONNECTIONLOST_TYPE: {
-                BOOST_LOG_TRIVIAL(error) << "Connection to controller lost.";
-                bt.reconnect();
-                bt.clear();
-                break;
-            }
-            case IGNORE_TYPE: {
-                break;
-            }
-            default:
-                bt.send(btc::Status::BT_INVALID_INPUT, 0);
-                BOOST_LOG_TRIVIAL(warning) << "Received invalid message from controller";
-                break;
+        }
+        else if(input.error == btc::InputError::IE_CONNECTION_LOST){
+            BOOST_LOG_TRIVIAL(error) << "Connection to controller lost.";
+            bt.reconnect();
+        }
+        else if(input.error == btc::InputError::IE_WRONG_FORMAT || input.error == btc::InputError::IE_WRONG_VALUE){
+            bt.send(btc::Status::BT_INVALID_INPUT, 0);
+            BOOST_LOG_TRIVIAL(warning) << "Received invalid message from controller";
         }
     }
     return 0;
