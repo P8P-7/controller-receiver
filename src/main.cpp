@@ -62,14 +62,14 @@ void initControls() {
             FUNCTION_MAP.emplace(BTN4, buttonToAllWing);
             break;
         case 3:
-            FUNCTION_MAP.emplace(JSLX, dualJoystickToMove);
-            FUNCTION_MAP.emplace(JSLY, dualJoystickToMove);
-            FUNCTION_MAP.emplace(JSRX, dualJoystickToMove);
-            FUNCTION_MAP.emplace(JSRY, dualJoystickToMove);
-            FUNCTION_MAP.emplace(BTN1, buttonToAllWing);
-            FUNCTION_MAP.emplace(BTN2, buttonToAllWing);
-            FUNCTION_MAP.emplace(BTN3, buttonToAllWing);
-            FUNCTION_MAP.emplace(BTN4, buttonToAllWing);
+            FUNCTION_MAP.emplace(JSLX, nullptr);
+            FUNCTION_MAP.emplace(JSLY, nullptr);
+            FUNCTION_MAP.emplace(JSRX, nullptr);
+            FUNCTION_MAP.emplace(JSRY, nullptr);
+            FUNCTION_MAP.emplace(BTN1, nullptr);
+            FUNCTION_MAP.emplace(BTN2, nullptr);
+            FUNCTION_MAP.emplace(BTN3, nullptr);
+            FUNCTION_MAP.emplace(BTN4, nullptr);
             break;
     }
 }
@@ -78,15 +78,15 @@ void initControls() {
  * @fn void sendToController()
  * @brief Sends incoming messages to controller.
  */
-void sendToController(proto::MessageCarrier messageCarrier) {
-    //TODO convert repo message into data for controller
+void sendToController(const proto::MessageCarrier &messageCarrier) {
+    if(!messageCarrier.has_synchronizemessage()){
+        BOOST_LOG_TRIVIAL(error) << "Incoming message does not have synchronized message.";
+        return;
+    }
 
-//    if(messageCarrier.has_synchronizemessage()){
-//
-//    }
+
 
     BOOST_LOG_TRIVIAL(debug) << "Sent message to conrtoller.";
-    return;
 }
 
 /**
@@ -94,7 +94,7 @@ void sendToController(proto::MessageCarrier messageCarrier) {
  * @brief print help menu to console
  * @param name executable name
  */
-static void show_usage(std::string name) {
+static void show_usage(const std::string &name) {
     std::cerr << "Usage: " << name << " <option(s)> ARGUMENT\n"
               << "Options:\n"
               << "\t-h,--help\t\tShow this help message\n"
@@ -225,7 +225,7 @@ int main(int argc, char **argv) {
                                              << "\" from controller.";
                     break;
                 }
-                case LASTSTATUS_TYPE: {
+                case LAST_STATUS_TYPE: {
                     bt.sendLast();
                     BOOST_LOG_TRIVIAL(debug) << "Sent last status to controller";
                     break;

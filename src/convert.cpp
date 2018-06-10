@@ -1,18 +1,19 @@
+#include <utility>
+
 #include "convert.h"
 
 
-std::deque<commands::ServoCommand_Motor> front = {commands::ServoCommand_Motor_LEFT_FRONT,commands::ServoCommand_Motor_RIGHT_FRONT};
+std::vector<commands::ServoCommand_Motor> front = {commands::ServoCommand_Motor_LEFT_FRONT,
+                                                  commands::ServoCommand_Motor_RIGHT_FRONT};
 
-std::deque<commands::ServoCommand_Motor> back = {commands::ServoCommand_Motor_LEFT_BACK,commands::ServoCommand_Motor_RIGHT_BACK};
+std::vector<commands::ServoCommand_Motor> back = {commands::ServoCommand_Motor_LEFT_BACK,
+                                                 commands::ServoCommand_Motor_RIGHT_BACK};
 
-MessageCarrier ignoreInput(CONTROL control, int value) {
-    return MessageCarrier();
-}
 
 MessageCarrier dualJoystickToMove(CONTROL control, int value) {
     MessageCarrier message;
-    CommandMessage *commandMessage(new CommandMessage);
-    commands::MoveCommand *moveCommand(new commands::MoveCommand);
+    auto *commandMessage(new CommandMessage);
+    auto *moveCommand(new commands::MoveCommand);
     commands::MotorCommand_Gear gear;
     std::deque<commands::MotorCommand_Motor> motors;
 
@@ -32,7 +33,7 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
     if (control == JSLY) {
         motors.emplace_back(commands::MotorCommand_Motor_LEFT_FRONT);
         motors.emplace_back(commands::MotorCommand_Motor_LEFT_BACK);
-    } else if (control == JSRY){
+    } else if (control == JSRY) {
         motors.emplace_back(commands::MotorCommand_Motor_RIGHT_FRONT);
         motors.emplace_back(commands::MotorCommand_Motor_RIGHT_BACK);
     }
@@ -56,25 +57,29 @@ MessageCarrier dualJoystickToMove(CONTROL control, int value) {
 
 MessageCarrier buttonToFrontWing(CONTROL control, int value) {
     int speed = 0;
-    if(value == 1){
+    if (value == 1) {
         speed = getConfig(SENSITIVITY) * 4;
     }
 
-    if(value == 0){
+    if (value == 0) {
         BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" released.";
-    } else{
+    } else {
         BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" pressed.";
     }
 
     switch (control) {
         case BTN1:
-            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_DOWN, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_DOWN,
+                                     speed);
         case BTN2:
-            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_UP, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_UP,
+                                     speed);
         case BTN3:
-            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_FRONT, commands::ServoCommand_Direction_UP, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_FRONT, commands::ServoCommand_Direction_UP,
+                                     speed);
         case BTN4:
-            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_FRONT, commands::ServoCommand_Direction_DOWN, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_FRONT, commands::ServoCommand_Direction_DOWN,
+                                     speed);
         default:
             break;
     }
@@ -84,25 +89,29 @@ MessageCarrier buttonToFrontWing(CONTROL control, int value) {
 
 MessageCarrier buttonToBackWing(CONTROL control, int value) {
     int speed = 0;
-    if(value == 1){
+    if (value == 1) {
         speed = getConfig(SENSITIVITY) * 4;
     }
 
-    if(value == 0){
+    if (value == 0) {
         BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" released.";
-    } else{
+    } else {
         BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" pressed.";
     }
 
     switch (control) {
         case BTN1:
-            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_BACK, commands::ServoCommand_Direction_UP, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_BACK, commands::ServoCommand_Direction_UP,
+                                     speed);
         case BTN2:
-            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_BACK, commands::ServoCommand_Direction_DOWN, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_BACK, commands::ServoCommand_Direction_DOWN,
+                                     speed);
         case BTN3:
-            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_DOWN, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_DOWN,
+                                     speed);
         case BTN4:
-            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_UP, speed);
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_UP,
+                                     speed);
         default:
             break;
     }
@@ -112,13 +121,13 @@ MessageCarrier buttonToBackWing(CONTROL control, int value) {
 
 MessageCarrier buttonToAllWing(CONTROL control, int value) {
     int speed = 0;
-    if(value == 1){
+    if (value == 1) {
         speed = getConfig(SENSITIVITY) * 4;
     }
 
-    if(value == 0){
+    if (value == 0) {
         BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" released.";
-    } else{
+    } else {
         BOOST_LOG_TRIVIAL(debug) << "Button \"" << control - 4 << "\" pressed.";
     }
 
@@ -138,14 +147,16 @@ MessageCarrier buttonToAllWing(CONTROL control, int value) {
     return MessageCarrier();
 }
 
-MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std::function<MessageCarrier(CONTROL,int)>> functionMap) {
-    if(functionMap[control] != NULL) {
+MessageCarrier
+convertControl(CONTROL control, int value, std::map<CONTROL, std::function<MessageCarrier(CONTROL, int)>> functionMap) {
+    if (functionMap[control] != nullptr) {
         return functionMap[control](control, value);
     }
     return MessageCarrier();
 }
 
-MessageCarrier toMoveWingMessage(commands::ServoCommand_Motor wing, commands::ServoCommand_Direction direction, int speed){
+MessageCarrier
+toMoveWingMessage(commands::ServoCommand_Motor wing, commands::ServoCommand_Direction direction, int speed) {
     MessageCarrier message;
     auto *commandMessage(new CommandMessage);
     auto *moveCommand(new commands::MoveWingCommand);
@@ -161,26 +172,18 @@ MessageCarrier toMoveWingMessage(commands::ServoCommand_Motor wing, commands::Se
     return message;
 }
 
-MessageCarrier toMoveWingMessage(std::deque<commands::ServoCommand_Motor> wings, commands::ServoCommand_Direction direction, int speed){
+MessageCarrier
+toMoveWingMessage(std::vector<commands::ServoCommand_Motor> wings, commands::ServoCommand_Direction direction,
+                  int speed) {
     MessageCarrier message;
     auto *commandMessage(new CommandMessage);
     auto *moveCommand(new commands::MoveWingCommand);
 
-    for(commands::ServoCommand_Motor wing : wings) {
+    for (commands::ServoCommand_Motor wing : wings) {
         commands::ServoCommand *wingCommand = moveCommand->add_commands();
         wingCommand->set_motor(wing);
         wingCommand->set_speed(speed);
-        if(wing == commands::ServoCommand_Motor_LEFT_FRONT || wing == commands::ServoCommand_Motor_RIGHT_BACK){
-            if(direction == commands::ServoCommand_Direction_UP){
-                wingCommand->set_direction(commands::ServoCommand_Direction_DOWN);
-            }
-            else{
-                wingCommand->set_direction(commands::ServoCommand_Direction_UP);
-            }
-        }
-        else{
-            wingCommand->set_direction(direction);
-        }
+        wingCommand->set_direction(direction);
     }
 
     commandMessage->set_allocated_movewingcommand(moveCommand);
@@ -190,5 +193,5 @@ MessageCarrier toMoveWingMessage(std::deque<commands::ServoCommand_Motor> wings,
 }
 
 TYPE stringToType(std::string string) {
-    return static_cast<TYPE>(std::stoi(string.c_str()));
+    return static_cast<TYPE>(std::stoi(string));
 }

@@ -16,14 +16,10 @@ using namespace goliath::proto;
  * @brief enum for all input types
  */
 enum TYPE {
-    IGNORE_TYPE = -3,
-    CONNECTIONLOST_TYPE = -2,
     CONTROL_TYPE = 0,
     CONFIG_TYPE = 1,
-    LASTSTATUS_TYPE = 2
+    LAST_STATUS_TYPE = 2
 };
-
-goliath::proto::MessageCarrier ignoreInput(CONTROL control, int value);
 
 /**
  * @fn goliath::proto::MessageCarrier dualJoystickToMove(CONTROL control, int value)
@@ -81,7 +77,7 @@ goliath::proto::MessageCarrier toMoveWingMessage(goliath::proto::commands::Servo
  * @param direction Direction to move the wing in
  * @param speed Speed to move the wing
  */
-goliath::proto::MessageCarrier toMoveWingMessage(std::deque<commands::ServoCommand_Motor> wings, commands::ServoCommand_Direction direction, int speed);
+goliath::proto::MessageCarrier toMoveWingMessage(std::vector<commands::ServoCommand_Motor> wings, commands::ServoCommand_Direction direction, int speed);
 
 /**
  * @fn TYPE stringToType (std::string string)
