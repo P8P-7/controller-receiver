@@ -195,6 +195,7 @@ int main(int argc, char **argv) {
     goliath::messaging::ZmqSubscriber sub(context, brokerAdress, 5555);
 
     sub.bind(proto::MessageCarrier::kSynchronizeMessage, sendToController);
+    sub.start();
 
 
     while (!stop) {
