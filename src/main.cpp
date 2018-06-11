@@ -6,6 +6,8 @@
 #include <goliath/zmq-messaging.h>
 #include <goliath/foundation.h>
 #include <MessageCarrier.pb.h>
+#include <SynchronizeMessage.pb.h>
+#include <repositories/BatteryRepository.pb.h>
 
 #include "config.h"
 #include "control.h"
@@ -18,6 +20,8 @@
  * @author Group 7 - Informatica
  */
 using namespace goliath;
+
+btc::BluetoothController bt;
 
 /**
  * @fn void initControls()
@@ -79,12 +83,24 @@ void initControls() {
  * @brief Sends incoming messages to controller.
  */
 void sendToController(const proto::MessageCarrier &messageCarrier) {
-    if(!messageCarrier.has_synchronizemessage()){
+    if (!messageCarrier.has_synchronizemessage()) {
         BOOST_LOG_TRIVIAL(error) << "Incoming message does not have synchronized message.";
         return;
     }
 
+    const proto::SynchronizeMessage synchronizeMessage = messageCarrier.synchronizemessage();
 
+    for (const auto anyMessage : synchronizeMessage.messages()) {
+        if (anyMessage.Is<proto::repositories::BatteryRepository>()) {
+            proto::repositories::BatteryRepository batteryRepository;
+            anyMessage.UnpackTo(&batteryRepository);
+
+            int32_t level = batteryRepository.level();
+            bt.send(btc::Status::BT_BATTERY, level);
+
+            BOOST_LOG_TRIVIAL(info) << "Sent battery level " << level << " to controller.";
+        }
+    }
 
     BOOST_LOG_TRIVIAL(debug) << "Sent message to conrtoller.";
 }
@@ -158,9 +174,8 @@ int main(int argc, char **argv) {
                           "converter-text.txt",
                           logLevel);
 
-    if(geteuid() != 0)
-    {
-        BOOST_LOG_TRIVIAL(error) <<  "Root privleges needed.";
+    if (geteuid() != 0) {
+        BOOST_LOG_TRIVIAL(error) << "Root privleges needed.";
         return 1;
     }
 
@@ -170,7 +185,7 @@ int main(int argc, char **argv) {
     initControls();
 
     // Setup bluetooth serial connection
-    btc::BluetoothController bt(devicePath, devicAddress);
+    bt.start(devicePath, devicAddress);
     bt.clear();
     bt.send(btc::Status::BT_CONNECTED, 0);
 
@@ -233,12 +248,10 @@ int main(int argc, char **argv) {
                 default:
                     break;
             }
-        }
-        else if(input.error == btc::InputError::IE_CONNECTION_LOST){
+        } else if (input.error == btc::InputError::IE_CONNECTION_LOST) {
             BOOST_LOG_TRIVIAL(error) << "Connection to controller lost.";
             bt.reconnect();
-        }
-        else if(input.error == btc::InputError::IE_WRONG_FORMAT || input.error == btc::InputError::IE_WRONG_VALUE){
+        } else if (input.error == btc::InputError::IE_WRONG_FORMAT || input.error == btc::InputError::IE_WRONG_VALUE) {
             bt.send(btc::Status::BT_INVALID_INPUT, 0);
             BOOST_LOG_TRIVIAL(warning) << "Received invalid message from controller";
         }

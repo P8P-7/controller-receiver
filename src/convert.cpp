@@ -183,7 +183,17 @@ toMoveWingMessage(std::vector<commands::ServoCommand_Motor> wings, commands::Ser
         commands::ServoCommand *wingCommand = moveCommand->add_commands();
         wingCommand->set_motor(wing);
         wingCommand->set_speed(speed);
-        wingCommand->set_direction(direction);
+        if(wing == commands::ServoCommand_Motor_LEFT_FRONT || wing == commands::ServoCommand_Motor_LEFT_BACK){
+            if(direction == commands::ServoCommand_Direction_UP){
+                wingCommand->set_direction(commands::ServoCommand_Direction_DOWN);
+            }
+            else{
+                wingCommand->set_direction(commands::ServoCommand_Direction_UP);
+            }
+        }
+        else{
+            wingCommand->set_direction(direction);
+        }
     }
 
     commandMessage->set_allocated_movewingcommand(moveCommand);

@@ -75,11 +75,17 @@ namespace goliath::btc {
         */
         BluetoothController(const std::string &devicePath, std::string &newDeviceAddress);
 
+        BluetoothController();
+
         /**
         * @fn bool connect()
         * @brief Connect to controller
         */
         bool connect();
+
+        void start();
+
+        void start(const std::string &newDevicePath, std::string &newDeviceAddress);
 
         /**
         * @fn void reconnect()

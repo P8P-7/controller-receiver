@@ -5,17 +5,6 @@ using namespace goliath::btc;
 BluetoothController::BluetoothController(const std::string &newDevicePath, std::string &newDeviceAddress) {
     devicePath = newDevicePath.c_str();
     deviceAddress = newDeviceAddress;
-
-    BOOST_LOG_TRIVIAL(info) << "Connecting to " << deviceAddress.c_str() << " on " << devicePath;
-
-    while (!connect()) {
-        BOOST_LOG_TRIVIAL(error) << "Could not connect to controller, retrying...";
-    };
-
-    BOOST_LOG_TRIVIAL(info) << "Connected to controller.";
-
-    serialPort.set_option(boost::asio::serial_port_base::baud_rate(38400));
-    serialPort.set_option(boost::asio::serial_port_base::character_size(8));
 }
 
 bool BluetoothController::connect() {
@@ -41,6 +30,34 @@ bool BluetoothController::connect() {
     }
 
     return false;
+}
+
+void BluetoothController::start(const std::string &newDevicePath, std::string &newDeviceAddress) {
+    devicePath = newDevicePath.c_str();
+    deviceAddress = newDeviceAddress;
+    BOOST_LOG_TRIVIAL(info) << "Connecting to " << deviceAddress.c_str() << " on " << devicePath;
+
+    while (!connect()) {
+        BOOST_LOG_TRIVIAL(error) << "Could not connect to controller, retrying...";
+    };
+
+    BOOST_LOG_TRIVIAL(info) << "Connected to controller.";
+
+    serialPort.set_option(boost::asio::serial_port_base::baud_rate(38400));
+    serialPort.set_option(boost::asio::serial_port_base::character_size(8));
+}
+
+void BluetoothController::start() {
+    BOOST_LOG_TRIVIAL(info) << "Connecting to " << deviceAddress.c_str() << " on " << devicePath;
+
+    while (!connect()) {
+        BOOST_LOG_TRIVIAL(error) << "Could not connect to controller, retrying...";
+    };
+
+    BOOST_LOG_TRIVIAL(info) << "Connected to controller.";
+
+    serialPort.set_option(boost::asio::serial_port_base::baud_rate(38400));
+    serialPort.set_option(boost::asio::serial_port_base::character_size(8));
 }
 
 void BluetoothController::reconnect() {
@@ -180,6 +197,10 @@ void BluetoothController::clear() {
         boost::system::error_code(errno, boost::asio::error::get_system_category());
     }
     BOOST_LOG_TRIVIAL(info) << "Serial buffer flushed.";
+}
+
+BluetoothController::BluetoothController() {
+
 }
 
 StatusMessage::StatusMessage(Status stat, short val) {
