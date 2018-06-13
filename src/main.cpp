@@ -8,6 +8,7 @@
 #include <MessageCarrier.pb.h>
 #include <SynchronizeMessage.pb.h>
 #include <repositories/BatteryRepository.pb.h>
+#include <repositories/LogRepository.pb.h>
 
 #include "config.h"
 #include "control.h"
@@ -99,6 +100,29 @@ void sendToController(const proto::MessageCarrier &messageCarrier) {
             bt.send(btc::Status::BT_BATTERY, level);
 
             BOOST_LOG_TRIVIAL(info) << "Sent battery level " << level << " to controller.";
+        } else if (anyMessage.Is<proto::repositories::LogRepository>()) {
+            proto::repositories::LogRepository logRepository;
+            anyMessage.UnpackTo(&logRepository);
+
+            int count = 0;
+
+            for (proto::repositories::LogRepository_Entry logRepositoryEntry : logRepository.entries()) {
+
+                proto::repositories::LogSeverity severity = logRepositoryEntry.severity();
+
+                if (severity == proto::repositories::LogSeverity::WARNING) {
+                    bt.send(btc::Status::BT_LOG_WARNING, severity, logRepositoryEntry.message());
+                    BOOST_LOG_TRIVIAL(info) << "Sent error log to controller.";
+                    count++;
+                }else if (severity == proto::repositories::LogSeverity::ERROR) {
+                    bt.send(btc::Status::BT_LOG_ERROR, severity, logRepositoryEntry.message());
+                    BOOST_LOG_TRIVIAL(info) << "Sent error log to controller.";
+                    count++;
+                }
+                if(count > 3){
+                    break;
+                }
+            }
         }
     }
 
@@ -197,6 +221,14 @@ int main(int argc, char **argv) {
     sub.bind(proto::MessageCarrier::kSynchronizeMessage, sendToController);
     sub.start();
 
+    MessageCarrier invalidateMessage;
+    auto *commandMessage(new CommandMessage);
+    auto *invalidateCommand(new commands::InvalidateAllCommand);
+    commandMessage->set_allocated_invalidateallcommand(invalidateCommand);
+    invalidateMessage.set_allocated_commandmessage(commandMessage);
+
+    pub.publish(invalidateMessage);
+    BOOST_LOG_TRIVIAL(info) << "Send invalidate command to core.";
 
     while (!stop) {
         // Wait for input data from controller
@@ -252,6 +284,11 @@ int main(int argc, char **argv) {
         } else if (input.error == btc::InputError::IE_CONNECTION_LOST) {
             BOOST_LOG_TRIVIAL(error) << "Connection to controller lost.";
             bt.reconnect();
+
+            pub.publish(invalidateMessage);
+
+            BOOST_LOG_TRIVIAL(info) << "Send invalidate command to core.";
+
         } else if (input.error == btc::InputError::IE_WRONG_FORMAT || input.error == btc::InputError::IE_WRONG_VALUE) {
             bt.send(btc::Status::BT_INVALID_INPUT, 0);
             BOOST_LOG_TRIVIAL(warning) << "Received invalid message from controller";

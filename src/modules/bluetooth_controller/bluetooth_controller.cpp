@@ -141,7 +141,29 @@ void BluetoothController::send(Status status, int value) {
         BOOST_LOG_TRIVIAL(debug) << "Sent status message \"" << message.c_str() << "\" to controller.";
 
     } catch (const boost::system::system_error &ex) {
-        BOOST_LOG_TRIVIAL(error) << "Could not send message to controller.";
+        BOOST_LOG_TRIVIAL(error) << "Could not send status message to controller.";
+    }
+}
+
+void BluetoothController::send(Status status, int severity, std::string message) {
+    boost::system::error_code error;
+
+    try {
+        std::ostringstream oss;
+        oss << "{" << static_cast<int>(status) << ";" << severity << ":" << message << "}";
+        std::string message = oss.str();
+
+        boost::asio::write(serialPort, boost::asio::buffer(message), error);
+
+        if (error) {
+            BOOST_LOG_TRIVIAL(error) << error.message().c_str();
+            return;
+        }
+
+        BOOST_LOG_TRIVIAL(debug) << "Sent log message \"" << message.c_str() << "\" to controller.";
+
+    } catch (const boost::system::system_error &ex) {
+        BOOST_LOG_TRIVIAL(error) << "Could not send log message to controller.";
     }
 }
 

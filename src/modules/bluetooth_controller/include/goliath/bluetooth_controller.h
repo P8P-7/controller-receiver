@@ -23,7 +23,9 @@ namespace goliath::btc {
     enum class Status : std::uint8_t {
         BT_CONNECTED,
         BT_INVALID_INPUT,
-        BT_BATTERY
+        BT_BATTERY,
+        BT_LOG_WARNING,
+        BT_LOG_ERROR
     };
 
     /**
@@ -105,6 +107,8 @@ namespace goliath::btc {
          * @param status
         */
         void send(Status status, int value);
+
+        void send(Status status, int severity, std::string message);
 
         void sendLast();
 
