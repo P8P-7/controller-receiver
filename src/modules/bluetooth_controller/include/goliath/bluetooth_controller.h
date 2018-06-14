@@ -96,7 +96,7 @@ namespace goliath::btc {
         void start();
 
         /**
-        * @fn bool start()
+        * @overload bool start()
         * @brief Start the controller with new device
         * @param newDevicePath Path to bluetooth serial device
         * @param newDeviceAddress Bluetooth adress of controller
@@ -124,7 +124,7 @@ namespace goliath::btc {
         void send(Status status, int value);
 
         /**
-        * @fn void send(int severity, std::string message)
+        * @overload void send(int severity, std::string message)
         * @brief Send log message to controller
         * @param severity log severity
         * @param message log message

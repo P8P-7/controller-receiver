@@ -81,8 +81,9 @@ void initControls() {
 }
 
 /**
- * @fn void sendToController()
+ * @fn void sendToController(const proto::MessageCarrier &messageCarrier)
  * @brief Sends incoming messages to controller.
+ * @param messageCarrier Message from subscriber
  */
 void sendToController(const proto::MessageCarrier &messageCarrier) {
     if (!messageCarrier.has_synchronizemessage()) {

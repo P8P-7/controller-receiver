@@ -84,7 +84,7 @@ goliath::proto::MessageCarrier convertControl(CONTROL control, int value, std::m
 goliath::proto::MessageCarrier toMoveWingMessage(goliath::proto::commands::ServoCommand_Motor wing, goliath::proto::commands::ServoCommand_Direction direction, int speed);
 
 /**
- * @fn goliath::proto::MessageCarrier toMoveWingMessage(std::deque<commands::ServoCommand_Motor> wings, commands::ServoCommand_Direction direction, int speed)
+ * @overload goliath::proto::MessageCarrier toMoveWingMessage(std::deque<commands::ServoCommand_Motor> wings, commands::ServoCommand_Direction direction, int speed)
  * @brief Converts input to Message with MoveWingCommand.
  * @param wings Deque of wings
  * @param direction Direction to move the wings in
