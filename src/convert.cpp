@@ -147,6 +147,56 @@ MessageCarrier buttonToAllWing(CONTROL control, int value) {
     return MessageCarrier();
 }
 
+MessageCarrier inputToCommand(CommandMessage::CommandCase commandCase){
+    MessageCarrier message;
+    CommandMessage *command = new CommandMessage;
+
+    switch (commandCase){
+        case CommandMessage::kDanceCommand:
+            command->set_allocated_dancecommand(new commands::DanceCommand);
+            break;
+        case CommandMessage::kEnterCommand:
+            command->set_allocated_entercommand(new commands::EnterCommand);
+            break;
+        case CommandMessage::kInterruptCommandCommand:
+            command->set_allocated_interruptcommandcommand(new commands::InterruptCommandCommand);
+            break;
+        case CommandMessage::kInvalidateAllCommand:
+            command->set_allocated_invalidateallcommand(new commands::InvalidateAllCommand);
+            break;
+        case CommandMessage::kLineDanceCommand:
+            command->set_allocated_linedancecommand(new commands::LineDanceCommand);
+            break;
+        case CommandMessage::kMoveCommand:
+            command->set_allocated_movecommand(new commands::MoveCommand);
+            break;
+        case CommandMessage::kMoveWingCommand:
+            command->set_allocated_movewingcommand(new commands::MoveWingCommand);
+            break;
+        case CommandMessage::kObstacleCourseCommand:
+            command->set_allocated_obstaclecoursecommand(new commands::ObstacleCourseCommand);
+            break;
+        case CommandMessage::kShutdownCommand:
+            command->set_allocated_shutdowncommand(new commands::ShutdownCommand);
+            break;
+        case CommandMessage::kSynchronizeCommandsCommand:
+            command->set_allocated_synchronizecommandscommand(new commands::SynchronizeCommandsCommand);
+            break;
+        case CommandMessage::kTransportRebuildCommand:
+            command->set_allocated_transportrebuildcommand(new commands::TransportRebuildCommand);
+            break;
+        case CommandMessage::kWunderhornCommand:
+            command->set_allocated_wunderhorncommand(new commands::WunderhornCommand);
+            break;
+        default:
+            break;
+    }
+
+    message.set_allocated_commandmessage(command);
+
+    return message;
+}
+
 MessageCarrier
 convertControl(CONTROL control, int value, std::map<CONTROL, std::function<MessageCarrier(CONTROL, int)>> functionMap) {
     if (functionMap[control] != nullptr) {
@@ -204,4 +254,8 @@ toMoveWingMessage(std::vector<commands::ServoCommand_Motor> wings, commands::Ser
 
 TYPE stringToType(std::string string) {
     return static_cast<TYPE>(std::stoi(string));
+}
+
+CommandMessage::CommandCase stringToCommandCase (std::string string){
+    return static_cast<CommandMessage::CommandCase >(std::stoi(string));
 }

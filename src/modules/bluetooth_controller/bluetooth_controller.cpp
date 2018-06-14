@@ -145,12 +145,12 @@ void BluetoothController::send(Status status, int value) {
     }
 }
 
-void BluetoothController::send(Status status, int severity, std::string message) {
+void BluetoothController::send(int severity, std::string message) {
     boost::system::error_code error;
 
     try {
         std::ostringstream oss;
-        oss << "{" << static_cast<int>(status) << ";" << severity << ":" << message << "}";
+        oss << "{" << severity << ":" << message << "}";
         std::string message = oss.str();
 
         boost::asio::write(serialPort, boost::asio::buffer(message), error);

@@ -25,7 +25,8 @@ namespace goliath::btc {
         BT_INVALID_INPUT,
         BT_BATTERY,
         BT_LOG_WARNING,
-        BT_LOG_ERROR
+        BT_LOG_ERROR,
+        BT_LOG_FATAL
     };
 
     /**
@@ -77,6 +78,9 @@ namespace goliath::btc {
         */
         BluetoothController(const std::string &devicePath, std::string &newDeviceAddress);
 
+        /**
+        * @brief Constructor
+        */
         BluetoothController();
 
         /**
@@ -85,8 +89,18 @@ namespace goliath::btc {
         */
         bool connect();
 
+        /**
+        * @fn bool start()
+        * @brief Start the controller
+        */
         void start();
 
+        /**
+        * @fn bool start()
+        * @brief Start the controller with new device
+        * @param newDevicePath Path to bluetooth serial device
+        * @param newDeviceAddress Bluetooth adress of controller
+        */
         void start(const std::string &newDevicePath, std::string &newDeviceAddress);
 
         /**
@@ -103,17 +117,37 @@ namespace goliath::btc {
 
         /**
         * @fn void send(Status status, short value)
-        * @brief Reconnect to controller if connection was lost
-         * @param status
+        * @brief Send Data to controller
+        * @param status Status to send
+        * @param value value
         */
         void send(Status status, int value);
 
-        void send(Status status, int severity, std::string message);
+        /**
+        * @fn void send(int severity, std::string message)
+        * @brief Send log message to controller
+        * @param severity log severity
+        * @param message log message
+        */
+        void send(int severity, std::string message);
 
+        /**
+        * @fn void sendLast()
+        * @brief Send last status message to controller
+        */
         void sendLast();
 
+        /**
+        * @fn void clear()
+        * @brief Clear bluetooth serial buffer
+        */
         void clear();
 
+        /**
+        * @fn bool connected()
+        * @brief Check if still connected to controller
+        * @return bool true if connected to controller
+        */
         bool connected();
 
     private:

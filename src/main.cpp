@@ -9,6 +9,7 @@
 #include <SynchronizeMessage.pb.h>
 #include <repositories/BatteryRepository.pb.h>
 #include <repositories/LogRepository.pb.h>
+#include <boost/algorithm/string.hpp>
 
 #include "config.h"
 #include "control.h"
@@ -89,9 +90,9 @@ void sendToController(const proto::MessageCarrier &messageCarrier) {
         return;
     }
 
-    const proto::SynchronizeMessage synchronizeMessage = messageCarrier.synchronizemessage();
+    const proto::SynchronizeMessage &synchronizeMessage = messageCarrier.synchronizemessage();
 
-    for (const auto anyMessage : synchronizeMessage.messages()) {
+    for (const auto &anyMessage : synchronizeMessage.messages()) {
         if (anyMessage.Is<proto::repositories::BatteryRepository>()) {
             proto::repositories::BatteryRepository batteryRepository;
             anyMessage.UnpackTo(&batteryRepository);
@@ -106,20 +107,18 @@ void sendToController(const proto::MessageCarrier &messageCarrier) {
 
             int count = 0;
 
-            for (proto::repositories::LogRepository_Entry logRepositoryEntry : logRepository.entries()) {
+            for (const proto::repositories::LogRepository_Entry &logRepositoryEntry : logRepository.entries()) {
 
                 proto::repositories::LogSeverity severity = logRepositoryEntry.severity();
 
-                if (severity == proto::repositories::LogSeverity::WARNING) {
-                    bt.send(btc::Status::BT_LOG_WARNING, severity, logRepositoryEntry.message());
-                    BOOST_LOG_TRIVIAL(info) << "Sent error log to controller.";
-                    count++;
-                }else if (severity == proto::repositories::LogSeverity::ERROR) {
-                    bt.send(btc::Status::BT_LOG_ERROR, severity, logRepositoryEntry.message());
+                if (severity >= proto::repositories::LogSeverity::WARNING) {
+                    std::string repoMessage = logRepositoryEntry.message();
+                    boost::replace_all(repoMessage, "\"", "\'");
+                    bt.send(severity, repoMessage);
                     BOOST_LOG_TRIVIAL(info) << "Sent error log to controller.";
                     count++;
                 }
-                if(count > 3){
+                if (count > 0) {
                     break;
                 }
             }
@@ -193,13 +192,10 @@ int main(int argc, char **argv) {
         }
     }
 
-    util::Console console(&util::colorConsoleFormatter,
-                          argv[0],
-                          "converter-text.txt",
-                          logLevel);
+    util::Console console(&util::colorConsoleFormatter, argv[0], "converter-text.txt", logLevel);
 
     if (geteuid() != 0) {
-        BOOST_LOG_TRIVIAL(error) << "Root privleges needed.";
+        BOOST_LOG_TRIVIAL(error) << "Root privileges needed.";
         return 1;
     }
 
@@ -221,12 +217,14 @@ int main(int argc, char **argv) {
     sub.bind(proto::MessageCarrier::kSynchronizeMessage, sendToController);
     sub.start();
 
+    // Setup invalidate message to request all repo data on (re)connect
     MessageCarrier invalidateMessage;
     auto *commandMessage(new CommandMessage);
     auto *invalidateCommand(new commands::InvalidateAllCommand);
     commandMessage->set_allocated_invalidateallcommand(invalidateCommand);
     invalidateMessage.set_allocated_commandmessage(commandMessage);
 
+    // Request all repo data
     pub.publish(invalidateMessage);
     BOOST_LOG_TRIVIAL(info) << "Send invalidate command to core.";
 
@@ -234,6 +232,7 @@ int main(int argc, char **argv) {
         // Wait for input data from controller
         btc::Input input = bt.receive();
 
+        // If input is correctly received
         if (input.error == btc::InputError::IE_SUCCES) {
             // Get input type
             TYPE type = stringToType(input.type);
@@ -246,10 +245,8 @@ int main(int argc, char **argv) {
                     proto::MessageCarrier message;
                     if (control < CONTROL_NR_ITEMS) {
                         message = convertControl(control, value, FUNCTION_MAP);
-                    } else {
-                        bt.send(btc::Status::BT_INVALID_INPUT, 0);
                     }
-                    // Send topic to broker
+                    // Send topic to broker if message no empty
                     if (message.ByteSize() > 0) {
                         pub.publish(message);
                     } else {
@@ -273,7 +270,20 @@ int main(int argc, char **argv) {
                                              << "\" from controller.";
                     break;
                 }
+                case COMMAND_TYPE: {
+                    // Convert to protobuf Message
+                    CommandMessage::CommandCase command = stringToCommandCase(input.control);
+                    proto::MessageCarrier message;
+                    message = inputToCommand(command);
+
+                    // Send topic to broker
+                    if (message.ByteSize() > 0) {
+                        pub.publish(message);
+                    }
+                    break;
+                }
                 case LAST_STATUS_TYPE: {
+                    // Send last status if it was not received correctly
                     bt.sendLast();
                     BOOST_LOG_TRIVIAL(debug) << "Sent last status to controller";
                     break;
