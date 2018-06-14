@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['inputerror',['InputError',['../namespacegoliath_1_1btc.html#ab4f87cdc9af755884bc25d7154cfdfb7',1,'goliath::btc']]]
+  ['config',['CONFIG',['../config_8h.html#ad29eb619406a287ee1ae4362167879cf',1,'config.h']]],
+  ['control',['CONTROL',['../control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd',1,'control.h']]]
 ];

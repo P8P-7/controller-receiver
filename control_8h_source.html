@@ -90,17 +90,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">control.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<a href="control_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">enum</span> CONTROL {</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    JSLX, JSLY, JSRX, JSRY, BTN1, BTN2, BTN3, BTN4, CONTROL_NR_ITEMS</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;};</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;CONTROL stringToControl(std::string <span class="keywordtype">string</span>);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">int</span> stringToValue(std::string <span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">   14</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    JSLX, JSLY, JSRX, JSRY, BTN1, BTN2, BTN3, BTN4, CONTROL_NR_ITEMS</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;};</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<a class="code" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> <a class="code" href="control_8h.html#a9707f2d69cb0145ebbdd939095633430">stringToControl</a>(std::string <span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">int</span> <a class="code" href="control_8h.html#a3f23fff156a5d715e68418feb7c82b2b">stringToValue</a>(std::string <span class="keywordtype">string</span>);</div>
+<div class="ttc" id="control_8h_html_ae8a66d7bdb27e5d300d5e52b50003ecd"><div class="ttname"><a href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a></div><div class="ttdeci">CONTROL</div><div class="ttdoc">enum for all axes and buttons </div><div class="ttdef"><b>Definition:</b> control.h:14</div></div>
+<div class="ttc" id="control_8h_html_a3f23fff156a5d715e68418feb7c82b2b"><div class="ttname"><a href="control_8h.html#a3f23fff156a5d715e68418feb7c82b2b">stringToValue</a></div><div class="ttdeci">int stringToValue(std::string string)</div><div class="ttdoc">Converts value of button, axis or config from string to int. </div><div class="ttdef"><b>Definition:</b> control.cpp:7</div></div>
+<div class="ttc" id="control_8h_html_a9707f2d69cb0145ebbdd939095633430"><div class="ttname"><a href="control_8h.html#a9707f2d69cb0145ebbdd939095633430">stringToControl</a></div><div class="ttdeci">CONTROL stringToControl(std::string string)</div><div class="ttdoc">Converts control string from controller to CONTROL enum. </div><div class="ttdef"><b>Definition:</b> control.cpp:3</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

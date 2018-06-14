@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getconfig',['getConfig',['../map_8h.html#a9900849ee08740bea4b6e81655103e0b',1,'map.cpp']]]
+  ['dualjoysticktomove',['dualJoystickToMove',['../convert_8h.html#a7f6ddedc325be9e8dce960706d810ff5',1,'convert.cpp']]]
 ];

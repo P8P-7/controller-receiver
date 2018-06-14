@@ -90,46 +90,59 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">convert.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<a href="convert_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;MessageCarrier.pb.h&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;boost/log/trivial.hpp&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;deque&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;config.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;control.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config_8h.html">config.h</a>&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="control_8h.html">control.h</a>&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="map_8h.html">map.h</a>&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">using namespace </span>goliath::proto;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">enum</span> TYPE {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    CONTROL_TYPE = 0,</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    CONFIG_TYPE = 1,</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    LAST_STATUS_TYPE = 2,</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    COMMAND_TYPE = 3</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;};</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;goliath::proto::MessageCarrier dualJoystickToMove(CONTROL control, <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;goliath::proto::MessageCarrier buttonToFrontWing(CONTROL control, <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;goliath::proto::MessageCarrier buttonToBackWing(CONTROL control, <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;goliath::proto::MessageCarrier buttonToAllWing(CONTROL control, <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;goliath::proto::MessageCarrier inputToCommand(goliath::proto::CommandMessage::CommandCase command);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;goliath::proto::MessageCarrier convertControl(CONTROL control, <span class="keywordtype">int</span> value, std::map&lt;CONTROL, std::function&lt;goliath::proto::MessageCarrier(CONTROL,<span class="keywordtype">int</span>)&gt;&gt; <span class="keyword">function</span>);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;goliath::proto::MessageCarrier toMoveWingMessage(goliath::proto::commands::ServoCommand_Motor wing, goliath::proto::commands::ServoCommand_Direction direction, <span class="keywordtype">int</span> speed);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;goliath::proto::MessageCarrier toMoveWingMessage(std::vector&lt;commands::ServoCommand_Motor&gt; wings, commands::ServoCommand_Direction direction, <span class="keywordtype">int</span> speed);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;TYPE stringToType (std::string <span class="keywordtype">string</span>);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;goliath::proto::CommandMessage::CommandCase stringToCommandCase (std::string <span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">using namespace </span>goliath::proto;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="convert_8h.html#a8f2199a2e0eea4415f38f3df5e603d9c">   23</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="convert_8h.html#a8f2199a2e0eea4415f38f3df5e603d9c">TYPE</a> {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    CONTROL_TYPE = 0,</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    CONFIG_TYPE = 1,</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    LAST_STATUS_TYPE = 2,</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    COMMAND_TYPE = 3</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;};</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;goliath::proto::MessageCarrier <a class="code" href="convert_8h.html#a7f6ddedc325be9e8dce960706d810ff5">dualJoystickToMove</a>(<a class="code" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> control, <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;goliath::proto::MessageCarrier <a class="code" href="convert_8h.html#a8fc9598096e87ff093446f4e684b970f">buttonToFrontWing</a>(<a class="code" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> control, <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;goliath::proto::MessageCarrier <a class="code" href="convert_8h.html#a49169d31d2797d2b3e63ca6d9682817e">buttonToBackWing</a>(<a class="code" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> control, <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;goliath::proto::MessageCarrier <a class="code" href="convert_8h.html#aa13d5f78ee3e174a7f0b030ad936573c">buttonToAllWing</a>(<a class="code" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> control, <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;goliath::proto::MessageCarrier <a class="code" href="convert_8h.html#ae1f23f95b5332cb9c4d2d5db2371365d">inputToCommand</a>(goliath::proto::CommandMessage::CommandCase command);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;goliath::proto::MessageCarrier <a class="code" href="convert_8h.html#a2bc099a1890845b5a820ffdb8aa7c32e">convertControl</a>(<a class="code" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> control, <span class="keywordtype">int</span> value, std::map&lt;<a class="code" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a>, std::function&lt;goliath::proto::MessageCarrier(<a class="code" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a>,<span class="keywordtype">int</span>)&gt;&gt; <span class="keyword">function</span>);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;goliath::proto::MessageCarrier <a class="code" href="convert_8h.html#ab5c28cffd5673ca7085c2980b9aa5882">toMoveWingMessage</a>(goliath::proto::commands::ServoCommand_Motor wing, goliath::proto::commands::ServoCommand_Direction direction, <span class="keywordtype">int</span> speed);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;goliath::proto::MessageCarrier <a class="code" href="convert_8h.html#ab5c28cffd5673ca7085c2980b9aa5882">toMoveWingMessage</a>(std::vector&lt;commands::ServoCommand_Motor&gt; wings, commands::ServoCommand_Direction direction, <span class="keywordtype">int</span> speed);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<a class="code" href="convert_8h.html#a8f2199a2e0eea4415f38f3df5e603d9c">TYPE</a> <a class="code" href="convert_8h.html#a8a01e9f657aade616eb13aae1696aebf">stringToType</a> (std::string <span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;goliath::proto::CommandMessage::CommandCase <a class="code" href="convert_8h.html#adf49b826563e6728a3a2249462723e85">stringToCommandCase</a> (std::string <span class="keywordtype">string</span>);</div>
+<div class="ttc" id="convert_8h_html_a8fc9598096e87ff093446f4e684b970f"><div class="ttname"><a href="convert_8h.html#a8fc9598096e87ff093446f4e684b970f">buttonToFrontWing</a></div><div class="ttdeci">goliath::proto::MessageCarrier buttonToFrontWing(CONTROL control, int value)</div><div class="ttdoc">Converts button presses to message with MoveWingCommand for front wings. </div><div class="ttdef"><b>Definition:</b> convert.cpp:58</div></div>
+<div class="ttc" id="convert_8h_html_aa13d5f78ee3e174a7f0b030ad936573c"><div class="ttname"><a href="convert_8h.html#aa13d5f78ee3e174a7f0b030ad936573c">buttonToAllWing</a></div><div class="ttdeci">goliath::proto::MessageCarrier buttonToAllWing(CONTROL control, int value)</div><div class="ttdoc">Converts button presses to message with MoveWingCommand for front/back wings. </div><div class="ttdef"><b>Definition:</b> convert.cpp:122</div></div>
+<div class="ttc" id="config_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div></div>
+<div class="ttc" id="convert_8h_html_a8a01e9f657aade616eb13aae1696aebf"><div class="ttname"><a href="convert_8h.html#a8a01e9f657aade616eb13aae1696aebf">stringToType</a></div><div class="ttdeci">TYPE stringToType(std::string string)</div><div class="ttdoc">Converts type string from controller to TYPE enum. </div><div class="ttdef"><b>Definition:</b> convert.cpp:255</div></div>
+<div class="ttc" id="convert_8h_html_a8f2199a2e0eea4415f38f3df5e603d9c"><div class="ttname"><a href="convert_8h.html#a8f2199a2e0eea4415f38f3df5e603d9c">TYPE</a></div><div class="ttdeci">TYPE</div><div class="ttdoc">enum for all input types </div><div class="ttdef"><b>Definition:</b> convert.h:23</div></div>
+<div class="ttc" id="convert_8h_html_a49169d31d2797d2b3e63ca6d9682817e"><div class="ttname"><a href="convert_8h.html#a49169d31d2797d2b3e63ca6d9682817e">buttonToBackWing</a></div><div class="ttdeci">goliath::proto::MessageCarrier buttonToBackWing(CONTROL control, int value)</div><div class="ttdoc">Converts button presses to message with MoveWingCommand for back wings. </div><div class="ttdef"><b>Definition:</b> convert.cpp:90</div></div>
+<div class="ttc" id="control_8h_html_ae8a66d7bdb27e5d300d5e52b50003ecd"><div class="ttname"><a href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a></div><div class="ttdeci">CONTROL</div><div class="ttdoc">enum for all axes and buttons </div><div class="ttdef"><b>Definition:</b> control.h:14</div></div>
+<div class="ttc" id="convert_8h_html_ab5c28cffd5673ca7085c2980b9aa5882"><div class="ttname"><a href="convert_8h.html#ab5c28cffd5673ca7085c2980b9aa5882">toMoveWingMessage</a></div><div class="ttdeci">goliath::proto::MessageCarrier toMoveWingMessage(goliath::proto::commands::ServoCommand_Motor wing, goliath::proto::commands::ServoCommand_Direction direction, int speed)</div><div class="ttdoc">Converts input to Message with MoveWingCommand. </div></div>
 <div class="ttc" id="map_8h_html"><div class="ttname"><a href="map_8h.html">map.h</a></div></div>
+<div class="ttc" id="control_8h_html"><div class="ttname"><a href="control_8h.html">control.h</a></div></div>
+<div class="ttc" id="convert_8h_html_a7f6ddedc325be9e8dce960706d810ff5"><div class="ttname"><a href="convert_8h.html#a7f6ddedc325be9e8dce960706d810ff5">dualJoystickToMove</a></div><div class="ttdeci">goliath::proto::MessageCarrier dualJoystickToMove(CONTROL control, int value)</div><div class="ttdoc">Converts joystick movement into Message with a MoveCommand. </div><div class="ttdef"><b>Definition:</b> convert.cpp:13</div></div>
+<div class="ttc" id="convert_8h_html_adf49b826563e6728a3a2249462723e85"><div class="ttname"><a href="convert_8h.html#adf49b826563e6728a3a2249462723e85">stringToCommandCase</a></div><div class="ttdeci">goliath::proto::CommandMessage::CommandCase stringToCommandCase(std::string string)</div><div class="ttdoc">Converts command string from controller to CommandCase. </div><div class="ttdef"><b>Definition:</b> convert.cpp:259</div></div>
+<div class="ttc" id="convert_8h_html_ae1f23f95b5332cb9c4d2d5db2371365d"><div class="ttname"><a href="convert_8h.html#ae1f23f95b5332cb9c4d2d5db2371365d">inputToCommand</a></div><div class="ttdeci">goliath::proto::MessageCarrier inputToCommand(goliath::proto::CommandMessage::CommandCase command)</div><div class="ttdoc">Converts button presses to message with MoveWingCommand for front/back wings. </div></div>
+<div class="ttc" id="convert_8h_html_a2bc099a1890845b5a820ffdb8aa7c32e"><div class="ttname"><a href="convert_8h.html#a2bc099a1890845b5a820ffdb8aa7c32e">convertControl</a></div><div class="ttdeci">goliath::proto::MessageCarrier convertControl(CONTROL control, int value, std::map&lt; CONTROL, std::function&lt; goliath::proto::MessageCarrier(CONTROL, int)&gt;&gt; function)</div><div class="ttdoc">Calls function mapped to the input. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

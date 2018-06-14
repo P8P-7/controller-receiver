@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Goliath II: /home/travis/build/P8P-7/controller-receiver/src/map.h File Reference</title>
+<title>Goliath II: /home/travis/build/P8P-7/controller-receiver/src/control.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -87,88 +87,89 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">map.h File Reference</div>  </div>
+<div class="title">control.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;string&gt;</code><br/>
-<code>#include &lt;MessageCarrier.pb.h&gt;</code><br/>
-<code>#include &lt;functional&gt;</code><br/>
-<code>#include &quot;<a class="el" href="config_8h_source.html">config.h</a>&quot;</code><br/>
-<code>#include &quot;<a class="el" href="control_8h_source.html">control.h</a>&quot;</code><br/>
 </div>
-<p><a href="map_8h_source.html">Go to the source code of this file.</a></p>
+<p><a href="control_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ae8a66d7bdb27e5d300d5e52b50003ecd"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> { <br/>
+&#160;&#160;<b>JSLX</b>, 
+<b>JSLY</b>, 
+<b>JSRX</b>, 
+<b>JSRY</b>, 
+<br/>
+&#160;&#160;<b>BTN1</b>, 
+<b>BTN2</b>, 
+<b>BTN3</b>, 
+<b>BTN4</b>, 
+<br/>
+&#160;&#160;<b>CONTROL_NR_ITEMS</b>
+<br/>
+ }</td></tr>
+<tr class="memdesc:ae8a66d7bdb27e5d300d5e52b50003ecd"><td class="mdescLeft">&#160;</td><td class="mdescRight">enum for all axes and buttons <br/></td></tr>
+<tr class="separator:ae8a66d7bdb27e5d300d5e52b50003ecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5af1011f0f921aef06ecdfc27d7bf791"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5af1011f0f921aef06ecdfc27d7bf791"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#a5af1011f0f921aef06ecdfc27d7bf791">initConfig</a> ()</td></tr>
-<tr class="memdesc:a5af1011f0f921aef06ecdfc27d7bf791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes controller configuration. <br/></td></tr>
-<tr class="separator:a5af1011f0f921aef06ecdfc27d7bf791"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9900849ee08740bea4b6e81655103e0b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#a9900849ee08740bea4b6e81655103e0b">getConfig</a> (<a class="el" href="config_8h.html#ad29eb619406a287ee1ae4362167879cf">CONFIG</a> config)</td></tr>
-<tr class="memdesc:a9900849ee08740bea4b6e81655103e0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get config value.  <a href="#a9900849ee08740bea4b6e81655103e0b">More...</a><br/></td></tr>
-<tr class="separator:a9900849ee08740bea4b6e81655103e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab9f8e3b828fa42072d47012fdee41ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="map_8h.html#aab9f8e3b828fa42072d47012fdee41ea">setConfig</a> (<a class="el" href="config_8h.html#ad29eb619406a287ee1ae4362167879cf">CONFIG</a> config, int value)</td></tr>
-<tr class="memdesc:aab9f8e3b828fa42072d47012fdee41ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set config value.  <a href="#aab9f8e3b828fa42072d47012fdee41ea">More...</a><br/></td></tr>
-<tr class="separator:aab9f8e3b828fa42072d47012fdee41ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9707f2d69cb0145ebbdd939095633430"><td class="memItemLeft" align="right" valign="top"><a class="el" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="control_8h.html#a9707f2d69cb0145ebbdd939095633430">stringToControl</a> (std::string string)</td></tr>
+<tr class="memdesc:a9707f2d69cb0145ebbdd939095633430"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts control string from controller to CONTROL enum.  <a href="#a9707f2d69cb0145ebbdd939095633430">More...</a><br/></td></tr>
+<tr class="separator:a9707f2d69cb0145ebbdd939095633430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f23fff156a5d715e68418feb7c82b2b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="control_8h.html#a3f23fff156a5d715e68418feb7c82b2b">stringToValue</a> (std::string string)</td></tr>
+<tr class="memdesc:a3f23fff156a5d715e68418feb7c82b2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts value of button, axis or config from string to int.  <a href="#a3f23fff156a5d715e68418feb7c82b2b">More...</a><br/></td></tr>
+<tr class="separator:a3f23fff156a5d715e68418feb7c82b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Group 7 - Informatica </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a9900849ee08740bea4b6e81655103e0b"></a>
+<a class="anchor" id="a9707f2d69cb0145ebbdd939095633430"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int getConfig </td>
+          <td class="memname"><a class="el" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> stringToControl </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="config_8h.html#ad29eb619406a287ee1ae4362167879cf">CONFIG</a>&#160;</td>
-          <td class="paramname"><em>config</em></td><td>)</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>string</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get config value. </p>
+<p>Converts control string from controller to CONTROL enum. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">config</td><td>CONFIG where you want to get the value of. </td></tr>
+    <tr><td class="paramname">string</td><td>Button or axis </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a class="anchor" id="aab9f8e3b828fa42072d47012fdee41ea"></a>
+<a class="anchor" id="a3f23fff156a5d715e68418feb7c82b2b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void setConfig </td>
+          <td class="memname">int stringToValue </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="config_8h.html#ad29eb619406a287ee1ae4362167879cf">CONFIG</a>&#160;</td>
-          <td class="paramname"><em>config</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>string</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>value</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set config value. </p>
+<p>Converts value of button, axis or config from string to int. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">config</td><td>config you want to change the value of. </td></tr>
-    <tr><td class="paramname">value</td><td>value to set for config. </td></tr>
+    <tr><td class="paramname">string</td><td>value of button, axis or config </td></tr>
   </table>
   </dd>
 </dl>
