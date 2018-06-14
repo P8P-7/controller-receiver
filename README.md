@@ -14,3 +14,5 @@ mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 sudo make -j4
 ```
+## Documentation
+https://p8p-7.github.io/controller-receiver/index.html
