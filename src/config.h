@@ -3,6 +3,11 @@
 #include <string>
 
 /**
+ * @file config.h
+ * @author Group 7 - Informatica
+ */
+
+/**
  * @var enum CONFIG
  * @brief enum for all configurations
  */

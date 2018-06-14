@@ -3,6 +3,11 @@
 #include <string>
 
 /**
+ * @file control.h
+ * @author Group 7 - Informatica
+ */
+
+/**
  * @var enum CONTROL
  * @brief enum for all axes and buttons
  */

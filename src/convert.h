@@ -9,6 +9,11 @@
 #include "control.h"
 #include "map.h"
 
+/**
+ * @file convert.h
+ * @author Group 7 - Informatica
+ */
+
 using namespace goliath::proto;
 
 /**
