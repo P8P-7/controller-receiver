@@ -86,7 +86,7 @@ goliath::proto::MessageCarrier toMoveWingMessage(goliath::proto::commands::Servo
 /**
  * @overload goliath::proto::MessageCarrier toMoveWingMessage(std::deque<commands::ServoCommand_Motor> wings, commands::ServoCommand_Direction direction, int speed)
  * @brief Converts input to Message with MoveWingCommand.
- * @param wings Deque of wings
+ * @param wings Vector of wings
  * @param direction Direction to move the wings in
  * @param speed Speed to move the wings
  */

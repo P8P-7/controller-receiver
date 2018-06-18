@@ -154,41 +154,54 @@ MessageCarrier inputToCommand(CommandMessage::CommandCase commandCase){
     switch (commandCase){
         case CommandMessage::kDanceCommand:
             command->set_allocated_dancecommand(new commands::DanceCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received DanceCommand from controller";
             break;
         case CommandMessage::kEnterCommand:
             command->set_allocated_entercommand(new commands::EnterCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received EnterCommand from controller";
             break;
         case CommandMessage::kInterruptCommandCommand:
             command->set_allocated_interruptcommandcommand(new commands::InterruptCommandCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received InterruptCommandCommand from controller";
             break;
         case CommandMessage::kInvalidateAllCommand:
             command->set_allocated_invalidateallcommand(new commands::InvalidateAllCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received InvalidateAllCommand from controller";
             break;
         case CommandMessage::kLineDanceCommand:
             command->set_allocated_linedancecommand(new commands::LineDanceCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received LineDanceCommand from controller";
             break;
         case CommandMessage::kMoveCommand:
             command->set_allocated_movecommand(new commands::MoveCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received MoveCommand from controller";
             break;
         case CommandMessage::kMoveWingCommand:
             command->set_allocated_movewingcommand(new commands::MoveWingCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received MoveWingCommand from controller";
             break;
         case CommandMessage::kObstacleCourseCommand:
             command->set_allocated_obstaclecoursecommand(new commands::ObstacleCourseCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received ObstacleCourseCommand from controller";
             break;
         case CommandMessage::kShutdownCommand:
             command->set_allocated_shutdowncommand(new commands::ShutdownCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received ShutdownCommand from controller";
             break;
         case CommandMessage::kSynchronizeCommandsCommand:
             command->set_allocated_synchronizecommandscommand(new commands::SynchronizeCommandsCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received SynchronizeCommandsCommand from controller";
             break;
         case CommandMessage::kTransportRebuildCommand:
             command->set_allocated_transportrebuildcommand(new commands::TransportRebuildCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received TransportRebuildCommand from controller";
             break;
         case CommandMessage::kWunderhornCommand:
             command->set_allocated_wunderhorncommand(new commands::WunderhornCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received WunderhornCommand from controller";
             break;
         default:
+            BOOST_LOG_TRIVIAL(info) << "Received unknown from controller";
             break;
     }
 

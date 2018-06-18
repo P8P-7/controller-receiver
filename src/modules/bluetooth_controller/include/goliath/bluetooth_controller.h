@@ -21,12 +21,12 @@ namespace goliath::btc {
     * @brief enum for all status updates to controller
     */
     enum class Status : std::uint8_t {
-        BT_CONNECTED,
-        BT_INVALID_INPUT,
-        BT_BATTERY,
-        BT_LOG_WARNING,
-        BT_LOG_ERROR,
-        BT_LOG_FATAL
+        BT_CONNECTED = 0,
+        BT_INVALID_INPUT = 1,
+        BT_BATTERY = 2,
+        BT_LOG_WARNING = 3,
+        BT_LOG_ERROR = 4,
+        BT_LOG_FATAL = 5
     };
 
     /**
