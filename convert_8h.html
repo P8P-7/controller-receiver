@@ -127,9 +127,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aa13d5f78ee3e174a7f0b030ad936573c"><td class="memItemLeft" align="right" valign="top">goliath::proto::MessageCarrier&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="convert_8h.html#aa13d5f78ee3e174a7f0b030ad936573c">buttonToAllWing</a> (<a class="el" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> control, int value)</td></tr>
 <tr class="memdesc:aa13d5f78ee3e174a7f0b030ad936573c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts button presses to message with MoveWingCommand for front/back wings.  <a href="#aa13d5f78ee3e174a7f0b030ad936573c">More...</a><br/></td></tr>
 <tr class="separator:aa13d5f78ee3e174a7f0b030ad936573c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1f23f95b5332cb9c4d2d5db2371365d"><td class="memItemLeft" align="right" valign="top">goliath::proto::MessageCarrier&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="convert_8h.html#ae1f23f95b5332cb9c4d2d5db2371365d">inputToCommand</a> (goliath::proto::CommandMessage::CommandCase command)</td></tr>
-<tr class="memdesc:ae1f23f95b5332cb9c4d2d5db2371365d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts button presses to message with MoveWingCommand for front/back wings.  <a href="#ae1f23f95b5332cb9c4d2d5db2371365d">More...</a><br/></td></tr>
-<tr class="separator:ae1f23f95b5332cb9c4d2d5db2371365d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a407053c9cc2b87368bcc06842f950fcd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a407053c9cc2b87368bcc06842f950fcd"></a>
+goliath::proto::MessageCarrier&#160;</td><td class="memItemRight" valign="bottom"><b>inputToCommand</b> (goliath::proto::CommandMessage::CommandCase command, int value=0)</td></tr>
+<tr class="separator:a407053c9cc2b87368bcc06842f950fcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bc099a1890845b5a820ffdb8aa7c32e"><td class="memItemLeft" align="right" valign="top">goliath::proto::MessageCarrier&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="convert_8h.html#a2bc099a1890845b5a820ffdb8aa7c32e">convertControl</a> (<a class="el" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a> control, int value, std::map&lt; <a class="el" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a>, std::function&lt; goliath::proto::MessageCarrier(<a class="el" href="control_8h.html#ae8a66d7bdb27e5d300d5e52b50003ecd">CONTROL</a>, int)&gt;&gt; function)</td></tr>
 <tr class="memdesc:a2bc099a1890845b5a820ffdb8aa7c32e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls function mapped to the input.  <a href="#a2bc099a1890845b5a820ffdb8aa7c32e">More...</a><br/></td></tr>
 <tr class="separator:a2bc099a1890845b5a820ffdb8aa7c32e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -324,30 +324,6 @@ goliath::proto::MessageCarrier&#160;</td><td class="memItemRight" valign="bottom
   <table class="params">
     <tr><td class="paramname">control</td><td>Button or axis </td></tr>
     <tr><td class="paramname">value</td><td>Value of button or axis </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="ae1f23f95b5332cb9c4d2d5db2371365d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">goliath::proto::MessageCarrier inputToCommand </td>
-          <td>(</td>
-          <td class="paramtype">goliath::proto::CommandMessage::CommandCase&#160;</td>
-          <td class="paramname"><em>command</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Converts button presses to message with MoveWingCommand for front/back wings. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">command</td><td>What type of command </td></tr>
   </table>
   </dd>
 </dl>
