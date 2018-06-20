@@ -64,7 +64,7 @@ goliath::proto::MessageCarrier buttonToAllWing(CONTROL control, int value);
  * @brief Converts button presses to message with MoveWingCommand for front/back wings
  * @param command What type of command
  */
-goliath::proto::MessageCarrier inputToCommand(goliath::proto::CommandMessage::CommandCase command);
+goliath::proto::MessageCarrier inputToCommand(goliath::proto::CommandMessage::CommandCase command, int value = 0);
 
 /**
  * @fn goliath::proto::MessageCarrier convertControl(CONTROL control, int value, std::map<CONTROL, std::function<goliath::proto::MessageCarrier(CONTROL,int)>> function)

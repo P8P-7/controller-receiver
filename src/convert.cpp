@@ -147,9 +147,10 @@ MessageCarrier buttonToAllWing(CONTROL control, int value) {
     return MessageCarrier();
 }
 
-MessageCarrier inputToCommand(CommandMessage::CommandCase commandCase){
+MessageCarrier inputToCommand(CommandMessage::CommandCase commandCase, int value){
     MessageCarrier message;
     CommandMessage *command = new CommandMessage;
+    auto *setWingPositionCommand = new commands::SetWingPositionCommand;
 
     switch (commandCase){
         case CommandMessage::kDanceCommand:
@@ -199,6 +200,12 @@ MessageCarrier inputToCommand(CommandMessage::CommandCase commandCase){
         case CommandMessage::kWunderhornCommand:
             command->set_allocated_wunderhorncommand(new commands::WunderhornCommand);
             BOOST_LOG_TRIVIAL(info) << "Received WunderhornCommand from controller";
+            break;
+        case CommandMessage::kSetWingPositionCommand:
+            setWingPositionCommand->set_speed(1);
+            setWingPositionCommand->set_wingposition(static_cast<commands::SetWingPositionCommand::Position>(value));
+            command->set_allocated_setwingpositioncommand(setWingPositionCommand);
+            BOOST_LOG_TRIVIAL(info) << "Received SetWingPositionCommand from controller with value: " << value;
             break;
         default:
             BOOST_LOG_TRIVIAL(info) << "Received unknown from controller";

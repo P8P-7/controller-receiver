@@ -25,6 +25,8 @@ using namespace goliath;
 
 btc::BluetoothController bt;
 
+uint64_t errorLogTimestamp;
+
 /**
  * @fn void initControls()
  * @brief Initializes receiver mode.
@@ -98,8 +100,9 @@ void sendToController(const proto::MessageCarrier &messageCarrier) {
             proto::repositories::BatteryRepository batteryRepository;
             anyMessage.UnpackTo(&batteryRepository);
 
+            //TODO implement updated
             int32_t level = batteryRepository.level();
-            bt.send(btc::Status::BT_BATTERY, level);
+            bt.send(btc::Status::BT_BATTERY, 100);
 
             BOOST_LOG_TRIVIAL(info) << "Sent battery level " << level << " to controller.";
         } else if (anyMessage.Is<proto::repositories::LogRepository>()) {
@@ -110,17 +113,22 @@ void sendToController(const proto::MessageCarrier &messageCarrier) {
 
             for (const proto::repositories::LogRepository_Entry &logRepositoryEntry : logRepository.entries()) {
 
-                proto::repositories::LogSeverity severity = logRepositoryEntry.severity();
+                if (logRepositoryEntry.timestamp() != errorLogTimestamp) {
 
-                if (severity >= proto::repositories::LogSeverity::WARNING) {
-                    std::string repoMessage = logRepositoryEntry.message();
-                    boost::replace_all(repoMessage, "\"", "\'");
-                    bt.send(severity, repoMessage);
-                    BOOST_LOG_TRIVIAL(info) << "Sent error log to controller.";
-                    count++;
-                }
-                if (count > 0) {
-                    break;
+                    proto::repositories::LogSeverity severity = logRepositoryEntry.severity();
+
+                    if (severity >= proto::repositories::LogSeverity::WARNING) {
+                        std::string repoMessage = logRepositoryEntry.message();
+                        boost::replace_all(repoMessage, "\"", "\'");
+                        bt.send(severity, repoMessage);
+                        BOOST_LOG_TRIVIAL(info) << "Sent error log to controller.";
+                        count++;
+                    }
+                    if (count > 0) {
+                        break;
+                    }
+
+                    errorLogTimestamp = logRepositoryEntry.timestamp();
                 }
             }
         }
@@ -275,7 +283,12 @@ int main(int argc, char **argv) {
                     // Convert to protobuf Message
                     CommandMessage::CommandCase command = stringToCommandCase(input.control);
                     proto::MessageCarrier message;
-                    message = inputToCommand(command);
+
+                    if (command == CommandMessage::CommandCase::kSetWingPositionCommand) {
+                        message = inputToCommand(command, stringToValue(input.value));
+                    } else {
+                        message = inputToCommand(command);
+                    };
 
                     // Send topic to broker
                     if (message.ByteSize() > 0) {
