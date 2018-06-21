@@ -68,7 +68,7 @@ void BluetoothController::reconnect() {
     BOOST_LOG_TRIVIAL(info) << "Reconnecting to " << deviceAddress.c_str() << " on " << devicePath;
 
     while (!connect()) {
-        BOOST_LOG_TRIVIAL(error) << "Could not reconnect to controller, retying...";
+        BOOST_LOG_TRIVIAL(error) << "Could not reconnect to controller, retrying...";
     };
 
     clear();

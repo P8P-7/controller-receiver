@@ -203,10 +203,10 @@ int main(int argc, char **argv) {
 
     util::Console console(&util::colorConsoleFormatter, argv[0], "converter-text.txt", logLevel);
 
-    if (geteuid() != 0) {
-        BOOST_LOG_TRIVIAL(error) << "Root privileges needed.";
-        return 1;
-    }
+//    if (geteuid() != 0) {
+//        BOOST_LOG_TRIVIAL(error) << "Root privileges needed.";
+//        return 1;
+//    }
 
     BOOST_LOG_TRIVIAL(info) << "Starting Controller Converter.";
 
@@ -219,7 +219,7 @@ int main(int argc, char **argv) {
     bt.send(btc::Status::BT_CONNECTED, 0);
 
     // Setup ZMQ publisher and subscriber
-    zmq::context_t context(2);
+    zmq::context_t context(1);
     goliath::messaging::ZmqPublisher pub(context, brokerAdress, 5556);
     goliath::messaging::ZmqSubscriber sub(context, brokerAdress, 5555);
 
