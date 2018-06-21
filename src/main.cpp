@@ -134,7 +134,7 @@ void sendToController(const proto::MessageCarrier &messageCarrier) {
         }
     }
 
-    BOOST_LOG_TRIVIAL(debug) << "Sent message to conrtoller.";
+    BOOST_LOG_TRIVIAL(debug) << "Sent message to controller.";
 }
 
 /**
