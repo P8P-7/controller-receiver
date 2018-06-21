@@ -4,10 +4,10 @@
 
 
 std::vector<commands::ServoCommand_Motor> front = {commands::ServoCommand_Motor_LEFT_FRONT,
-                                                  commands::ServoCommand_Motor_RIGHT_FRONT};
+                                                   commands::ServoCommand_Motor_RIGHT_FRONT};
 
 std::vector<commands::ServoCommand_Motor> back = {commands::ServoCommand_Motor_LEFT_BACK,
-                                                 commands::ServoCommand_Motor_RIGHT_BACK};
+                                                  commands::ServoCommand_Motor_RIGHT_BACK};
 
 
 MessageCarrier dualJoystickToMove(CONTROL control, int value) {
@@ -69,10 +69,10 @@ MessageCarrier buttonToFrontWing(CONTROL control, int value) {
 
     switch (control) {
         case BTN1:
-            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_DOWN,
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_UP,
                                      speed);
         case BTN2:
-            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_UP,
+            return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_FRONT, commands::ServoCommand_Direction_DOWN,
                                      speed);
         case BTN3:
             return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_FRONT, commands::ServoCommand_Direction_UP,
@@ -107,10 +107,10 @@ MessageCarrier buttonToBackWing(CONTROL control, int value) {
             return toMoveWingMessage(commands::ServoCommand_Motor_LEFT_BACK, commands::ServoCommand_Direction_DOWN,
                                      speed);
         case BTN3:
-            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_DOWN,
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_UP,
                                      speed);
         case BTN4:
-            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_UP,
+            return toMoveWingMessage(commands::ServoCommand_Motor_RIGHT_BACK, commands::ServoCommand_Direction_DOWN,
                                      speed);
         default:
             break;
@@ -137,9 +137,9 @@ MessageCarrier buttonToAllWing(CONTROL control, int value) {
         case BTN2:
             return toMoveWingMessage(front, commands::ServoCommand_Direction_DOWN, speed);
         case BTN3:
-            return toMoveWingMessage(back, commands::ServoCommand_Direction_DOWN, speed);
-        case BTN4:
             return toMoveWingMessage(back, commands::ServoCommand_Direction_UP, speed);
+        case BTN4:
+            return toMoveWingMessage(back, commands::ServoCommand_Direction_DOWN, speed);
         default:
             break;
     }
@@ -147,12 +147,12 @@ MessageCarrier buttonToAllWing(CONTROL control, int value) {
     return MessageCarrier();
 }
 
-MessageCarrier inputToCommand(CommandMessage::CommandCase commandCase, int value){
+MessageCarrier inputToCommand(CommandMessage::CommandCase commandCase, int value) {
     MessageCarrier message;
     CommandMessage *command = new CommandMessage;
     auto *setWingPositionCommand = new commands::SetWingPositionCommand;
 
-    switch (commandCase){
+    switch (commandCase) {
         case CommandMessage::kDanceCommand:
             command->set_allocated_dancecommand(new commands::DanceCommand);
             BOOST_LOG_TRIVIAL(info) << "Received DanceCommand from controller";
@@ -253,17 +253,7 @@ toMoveWingMessage(std::vector<commands::ServoCommand_Motor> wings, commands::Ser
         commands::ServoCommand *wingCommand = moveCommand->add_commands();
         wingCommand->set_motor(wing);
         wingCommand->set_speed(speed);
-        if(wing == commands::ServoCommand_Motor_LEFT_FRONT || wing == commands::ServoCommand_Motor_LEFT_BACK){
-            if(direction == commands::ServoCommand_Direction_UP){
-                wingCommand->set_direction(commands::ServoCommand_Direction_DOWN);
-            }
-            else{
-                wingCommand->set_direction(commands::ServoCommand_Direction_UP);
-            }
-        }
-        else{
-            wingCommand->set_direction(direction);
-        }
+        wingCommand->set_direction(direction);
     }
 
     commandMessage->set_allocated_movewingcommand(moveCommand);
@@ -276,6 +266,6 @@ TYPE stringToType(std::string string) {
     return static_cast<TYPE>(std::stoi(string));
 }
 
-CommandMessage::CommandCase stringToCommandCase (std::string string){
+CommandMessage::CommandCase stringToCommandCase(std::string string) {
     return static_cast<CommandMessage::CommandCase >(std::stoi(string));
 }
