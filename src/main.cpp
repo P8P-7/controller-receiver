@@ -103,8 +103,8 @@ void sendToController(const proto::MessageCarrier &messageCarrier) {
             //TODO implement updated
             int32_t level = batteryRepository.level();
             bt.send(btc::Status::BT_BATTERY, 100);
-
             BOOST_LOG_TRIVIAL(info) << "Sent battery level " << level << " to controller.";
+
         } else if (anyMessage.Is<proto::repositories::LogRepository>()) {
             proto::repositories::LogRepository logRepository;
             anyMessage.UnpackTo(&logRepository);
@@ -133,8 +133,6 @@ void sendToController(const proto::MessageCarrier &messageCarrier) {
             }
         }
     }
-
-    BOOST_LOG_TRIVIAL(debug) << "Sent message to controller.";
 }
 
 /**
