@@ -88,6 +88,9 @@ void initControls() {
  * @param messageCarrier Message from subscriber
  */
 void sendToController(const proto::MessageCarrier &messageCarrier) {
+    if (!bt.connected()) {
+        return;
+    }
     if (!messageCarrier.has_synchronizemessage()) {
         BOOST_LOG_TRIVIAL(error) << "Incoming message does not have synchronized message.";
         return;
