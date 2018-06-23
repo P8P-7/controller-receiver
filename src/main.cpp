@@ -204,10 +204,10 @@ int main(int argc, char **argv) {
 
     util::Console console(&util::colorConsoleFormatter, argv[0], "converter-text.txt", logLevel);
 
-//    if (geteuid() != 0) {
-//        BOOST_LOG_TRIVIAL(error) << "Root privileges needed.";
-//        return 1;
-//    }
+    if (geteuid() != 0) {
+        BOOST_LOG_TRIVIAL(error) << "Root privileges needed.";
+        return 1;
+    }
 
     BOOST_LOG_TRIVIAL(info) << "Starting Controller Converter.";
 
@@ -309,6 +309,7 @@ int main(int argc, char **argv) {
         } else if (input.error == btc::InputError::IE_CONNECTION_LOST) {
             BOOST_LOG_TRIVIAL(error) << "Connection to controller lost.";
 
+            BOOST_LOG_TRIVIAL(debug) << "Setting control values to 0.";
             for (int i = 0; i < CONTROL_NR_ITEMS; i++) {
                 proto::MessageCarrier message;
                 message = convertControl(static_cast<CONTROL>(i), 0, FUNCTION_MAP);
