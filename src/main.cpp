@@ -308,6 +308,15 @@ int main(int argc, char **argv) {
             }
         } else if (input.error == btc::InputError::IE_CONNECTION_LOST) {
             BOOST_LOG_TRIVIAL(error) << "Connection to controller lost.";
+
+            for (int i = 0; i < CONTROL_NR_ITEMS; i++) {
+                proto::MessageCarrier message;
+                message = convertControl(static_cast<CONTROL>(i), 0, FUNCTION_MAP);
+                if (message.ByteSize() > 0) {
+                    pub.publish(message);
+                }
+            }
+
             bt.reconnect();
 
             pub.publish(invalidateMessage);
