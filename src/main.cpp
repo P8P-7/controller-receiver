@@ -220,7 +220,7 @@ int main(int argc, char **argv) {
     bt.send(btc::Status::BT_CONNECTED, 0);
 
     // Setup ZMQ publisher and subscriber
-    zmq::context_t context(1);
+    zmq::context_t context(2);
     goliath::messaging::ZmqPublisher pub(context, brokerAdress, 5556);
     goliath::messaging::ZmqSubscriber sub(context, brokerAdress, 5555);
 
